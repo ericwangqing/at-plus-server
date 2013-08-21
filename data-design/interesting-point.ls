@@ -32,3 +32,7 @@ interesting-point =
       url: 'uid/2' # uid为creator的id，资源为：http://at-plus-server/pictures/uid/2
     * type: 'photo' # 注意！这里是示例。实际上photo类和snapshot类是互斥的。
       url: 'uid/4'
+  reposted-platforms:
+    * type: 'weibo' # 各个SNS，先暂时为weibo
+      url: 'http://weibo.com/xxxx' # repost的地址
+    ...
