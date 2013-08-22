@@ -30,4 +30,3 @@ function initial-at-plus-server
 function start-at-plus-server
 	server.http-server.listen port, ->
 		console.log "at-plus is listening on port #{port}"  
-
