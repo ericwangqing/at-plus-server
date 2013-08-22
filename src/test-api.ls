@@ -6,7 +6,8 @@ socket = io.connect BASE_URL
 do
   (data) <-! socket.on 'ask-location' 
   console.log "socket on ask-location get:", data
-  socket.emit 'answer-location', {web-url: window.href, world-position: null}
+  console.log 'location.href: ', location.href
+  socket.emit 'answer-location', {url: location.href}
   console.log "socket emit answer-location"
 
 do  

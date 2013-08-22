@@ -24,7 +24,7 @@ user =
     * 大学同学: ['uid-3', 'uid-4']
       _weibo: ['昵称1', '昵称2'] #用户在微博上的好友
   follows:['uid-5', 'uid-6'] # follow是单向的
-  social-accounts:
+  third-part-accounts:
     * type: 'weibo' # weibo | qq | ……
       api-url: 'http://weibo.com/api'
       account-name: '张三微博'
