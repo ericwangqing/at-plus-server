@@ -1,6 +1,10 @@
 require! './interesting-points-manager'
 locations-manager = 
   init: (io, callback)->
+    (socket) <-! io.of('/locations').on 'connection'
+    (sesssion-id)
+
+
     (socket) <-! io.sockets.on 'connection'
     console.log 'locations-manager: connected'
     socket.emit 'ask-location'

@@ -20,12 +20,18 @@ function configure-at-plus-server
 function initial-at-plus-server
   server.http-server = http.createServer server # 需要用http server包装一下，才能正确初始化socket.io
   io = socket.listen server.http-server
-  do
-    (location) <-! locations-channel.init io
-    # (user) <-! users-channel.init io, location
-    interesting-points-channel.init location, user = null, io 
-    # chats-channel.init location, user, io
-    # notifications-channel.init location, user, io
+
+  locations-channel.init io
+  # users-channal.init io
+  # interesting-points-channel.init io
+  # circles-channel.init io
+  # nitification-channel.init io
+  # do
+  #   (location) <-! locations-channel.init io
+  #   # (user) <-! users-channel.init io, location
+  #   interesting-points-channel.init location, user = null, io 
+  #   # chats-channel.init location, user, io
+  #   # notifications-channel.init location, user, io
 
 function start-at-plus-server
   server.http-server.listen port, ->

@@ -5,7 +5,7 @@ module.exports = (grunt)->
       main:
         files: [{expand: true, cwd:'resource/', src: ['**'], dest: 'bin/'}]
     livescript:
-      dynamic_mappings:
+      src:
         files: [
           expand: true
           flatten: true
@@ -14,14 +14,35 @@ module.exports = (grunt)->
           dest: 'bin/'
           ext: '.js'
         ]
+      test:
+        files: [
+          expand: true # 将来改为在dev下的配置
+          flatten: true
+          cwd: 'test'
+          src: ['**/*.ls']
+          dest: 'test-bin/'
+          ext: '.spec.js'
+        ]
     jshint:
       files: "bin/**/*.js"
+    simplemocha:
+      src: 'test-bin/**/*.spec.js'
+      options:
+        reporter: 'spec'
+        slow: 200
+        timeout: 1000
     watch:
-      all:
+      src:
         files: ["src/**/*.ls"]
-        tasks: ["copy", "livescript"]
+        tasks: ["copy", "livescript:src"]
         options:
           livereload: true
+      test_compile:
+        files: ["test/**/*.ls"]
+        tasks: ["livescript:test"]
+      test_run:
+        files: ["bin/**/*.js", "test-bin/**/*.spec.js"]
+        tasks: ["simplemocha"]
     nodemon:
       all:
         options: 
@@ -38,6 +59,7 @@ module.exports = (grunt)->
         # tasks: ['nodemon', 'watch']
 
   grunt.loadNpmTasks "grunt-livescript"
+  grunt.loadNpmTasks "grunt-simple-mocha"
   grunt.loadNpmTasks "grunt-nodemon"
   grunt.loadNpmTasks "grunt-concurrent"
   grunt.loadNpmTasks "grunt-contrib-jshint"
@@ -46,3 +68,9 @@ module.exports = (grunt)->
   grunt.loadNpmTasks "grunt-contrib-copy"
 
   grunt.registerTask "default", ["clean", "copy", "livescript", "concurrent:target"]
+
+  grunt.event.on 'watch', (action, filepath)->
+    console.log 'filepath: ', filepath
+    grunt.config ['livescript', 'src'], filepath
+    grunt.config ['livescript', 'test'], filepath
+

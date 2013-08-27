@@ -1,27 +1,30 @@
 {
-  "name": "at-plus-server",
-  "version": "0.0.1",
-  "description": "@+ server",
-  "main": "bin/server.js",
-  "dependencies": {
-    "express": "~3.0",
-    "socket.io": "~0.9",
-    "mongo-client": "~0.2",
-    "mongo": "~0.1"
-  },
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-livescript": "~0.5.0",
-    "grunt-contrib-jshint": "~0.6.3",
-    "grunt-contrib-watch": "~0.5.2",
-    "grunt-nodemon": "~0.1.0",
-    "grunt-concurrent": "~0.3.0",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-copy": "~0.4.1"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "WANG, Qing",
-  "license": "BSD"
+	"name": "at-plus-server",
+	"version": "0.0.1",
+	"description": "@+ server",
+	"main": "bin/server.js",
+	"dependencies": {
+		"express": "~3.0",
+		"socket.io": "~0.9",
+		"mongodb": "~1.3",
+		"session.socket.io": "~0.1"
+	},
+	"repository": "https://github.com/ericwangqing/at-plus-server.git",
+	"devDependencies": {
+		"grunt": "~0.4.1",
+		"grunt-livescript": "~0.5.0",
+		"grunt-contrib-jshint": "~0.6.3",
+		"grunt-contrib-watch": "~0.5.2",
+		"grunt-nodemon": "~0.1.0",
+		"grunt-concurrent": "~0.3.0",
+		"grunt-contrib-clean": "~0.5.0",
+		"grunt-contrib-copy": "~0.4.1",
+    "should": "~1.2.1",
+		"grunt-simple-mocha": "~0.4"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "WANG, Qing",
+	"license": "BSD"
 }
