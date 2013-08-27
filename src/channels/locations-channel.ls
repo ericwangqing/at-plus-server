@@ -15,4 +15,4 @@ locations-manager =
     socket.emit 'interesting-points', interesting-points
     callback error, data
 
-module.exports <<< locations-manager
+module.exports <<< locations-manager 

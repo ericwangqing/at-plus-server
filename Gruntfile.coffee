@@ -34,15 +34,15 @@ module.exports = (grunt)->
     watch:
       src:
         files: ["src/**/*.ls"]
-        tasks: ["copy", "livescript:src"]
+        tasks: ["copy", "livescript:src",  "delayed-simplemocha"]
         options:
           livereload: true
       test_compile:
         files: ["test/**/*.ls"]
-        tasks: ["livescript:test"]
-      test_run:
-        files: ["bin/**/*.js", "test-bin/**/*.spec.js"]
-        tasks: ["simplemocha"]
+        tasks: ["livescript:test", "simplemocha"]
+      # test_run:
+      #   files: ["bin/**/*.js", "test-bin/**/*.spec.js"]
+      #   tasks: ["simplemocha"]
     nodemon:
       all:
         options: 
@@ -68,6 +68,15 @@ module.exports = (grunt)->
   grunt.loadNpmTasks "grunt-contrib-copy"
 
   grunt.registerTask "default", ["clean", "copy", "livescript", "concurrent:target"]
+
+  grunt.registerTask 'delayed-simplemocha', "run mocha 1000ms later", ->
+    done = this.async()
+    DELAY = 2000
+    grunt.log.writeln 'run mocha after %dms', DELAY
+    setTimeout (->
+      grunt.task.run 'simplemocha'
+      done()
+    ), DELAY
 
   grunt.event.on 'watch', (action, filepath)->
     console.log 'filepath: ', filepath
