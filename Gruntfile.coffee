@@ -28,6 +28,7 @@ module.exports = (grunt)->
     simplemocha:
       src: 'test-bin/**/*.spec.js'
       options:
+        # require: 'should' # use should in tests without requiring in each
         reporter: 'spec'
         slow: 200
         timeout: 1000
@@ -68,6 +69,7 @@ module.exports = (grunt)->
   grunt.loadNpmTasks "grunt-contrib-copy"
 
   grunt.registerTask "default", ["clean", "copy", "livescript", "concurrent:target"]
+  grunt.registerTask "test", ["simplemocha"]
 
   grunt.registerTask 'delayed-simplemocha', "run mocha 1000ms later", ->
     done = this.async()
