@@ -41,7 +41,7 @@ function initial-at-plus-server
 
   # (err, data) <-! locations-channel.init session-sockects
   session-sockects.on 'connection', !(err, socket, session)->
-    session.client = 'client1'
+    session.client = session.client or Math.random!
     session.save!
     socket.emit 'initial', session: client: session.client
 
