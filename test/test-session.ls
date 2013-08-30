@@ -1,13 +1,3 @@
-io = require 'socket.io-client'
-patch = require './patch-io-client-with-session.spec'
-
-base-url = 'http://localhost:3000'
-options = 
-  transports: ['websocket']
-  'force new connection': true
-
-can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为can
-
 describe '能够通过session区分不同的用户', !->
   before-each !(done)->
     patch.patch-io-client-with-session base-url, done
@@ -19,7 +9,7 @@ describe '能够通过session区分不同的用户', !->
     client1.on 'initial', !(data)->
       console.log 'data: ', data
       cid := data.session.client
-      client1.emit 'request-1', null 
+      client1.emit 'request-1', null
 
     client1.on 'request-1-answer', !(data)->
       console.log 'data: ', data
@@ -39,7 +29,6 @@ describe '能够通过session区分不同的用户', !->
       console.log 'client1 request1 answer data: ', data
       data.session.client.should.eql cid1
 
-      # patch.reset-session!
       <-! patch.patch-io-client-with-session base-url
       client2 = io.connect base-url, options
       client2.on 'initial', !(data)->

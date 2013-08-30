@@ -1,9 +1,33 @@
 module.exports = (grunt)->
   grunt.initConfig
-    clean: ["bin"]
+    clean: ["bin", 'test-temp', 'test-bin']
     copy:
       main:
         files: [{expand: true, cwd:'resource/', src: ['**'], dest: 'bin/'}]
+    concat: # 将每个测试中都要用的部分抽出来
+      prefix_test:
+        options:
+          banner: '''
+io = require 'socket.io-client'
+patch = require './patch-io-client-with-session'
+require! should
+
+base-url = 'http://localhost:3000'
+options = 
+  transports: ['websocket']
+  'force new connection': true
+
+can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为can
+
+          '''
+        files: [
+          expand: true # 将来改为在dev下的配置
+          # flatten: true
+          cwd: 'test'
+          src: ['**/*.ls', '!**/*patch*', '!**/*helper*']
+          dest: 'test-temp/'
+          ext: '.ls'
+        ]
     livescript:
       src:
         files: [
@@ -18,10 +42,19 @@ module.exports = (grunt)->
         files: [
           expand: true # 将来改为在dev下的配置
           flatten: true
-          cwd: 'test'
+          cwd: 'test-temp'
           src: ['**/*.ls']
           dest: 'test-bin/'
           ext: '.spec.js'
+        ]
+      test_helper:
+        files: [
+          expand: true
+          flatten: true
+          cwd: 'test'
+          src: ['**/*patch*.ls', '**/*helper*.ls']
+          dest: 'test-bin/'
+          ext: '.js'
         ]
     jshint:
       files: "bin/**/*.js"
@@ -40,24 +73,17 @@ module.exports = (grunt)->
           livereload: true
       test_compile:
         files: ["test/**/*.ls"]
-        tasks: ["livescript:test", "simplemocha"]
-      # test_run:
-      #   files: ["bin/**/*.js", "test-bin/**/*.spec.js"]
-      #   tasks: ["simplemocha"]
+        tasks: ["concat", "livescript:test", "livescript:test_helper", "simplemocha"]
     nodemon:
       all:
         options: 
           watchedFolders: ['bin']
-          # delayTime: 1
-          # env:
-          #   PORT: '9999'
     concurrent:
       target: 
         tasks:
           ['watch', 'nodemon']
         options:
           logConcurrentOutput: true
-        # tasks: ['nodemon', 'watch']
 
   grunt.loadNpmTasks "grunt-livescript"
   grunt.loadNpmTasks "grunt-simple-mocha"
@@ -67,9 +93,11 @@ module.exports = (grunt)->
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks "grunt-contrib-copy"
+  grunt.loadNpmTasks "grunt-contrib-concat"
 
-  grunt.registerTask "default", ["clean", "copy", "livescript", "concurrent:target"]
+  grunt.registerTask "default", ["clean", "copy", "concat", "livescript", "concurrent:target"]
   grunt.registerTask "test", ["simplemocha"]
+
 
   grunt.registerTask 'delayed-simplemocha', "run mocha 1000ms later", ->
     done = this.async()

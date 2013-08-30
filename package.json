@@ -24,7 +24,8 @@
     "jade": "0.27.x",
     "grunt-simple-mocha": "~0.4",
     "socket.io-client": "~0.9",
-    "request": "~2"
+    "request": "~2",
+    "grunt-contrib-concat": "~0.3.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
