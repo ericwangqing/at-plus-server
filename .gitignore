@@ -3,3 +3,4 @@ bin/
 node_modules/
 test-bin/
 test-temp/
+.DS_Store
