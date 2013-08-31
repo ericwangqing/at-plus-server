@@ -1,6 +1,4 @@
 describe '能够通过session区分不同的用户', !->
-  before-each !(done)->
-    patch.patch-io-client-with-session base-url, done
 
   can '在同一个用户多次请求之间保存状态', !(done)->
     client1 = io.connect base-url, options
@@ -18,7 +16,7 @@ describe '能够通过session区分不同的用户', !->
 
   can '能够区分多个用户的请求', !(done)->
     cid1 = cid2 = null
-    client1 = io.connect base-url, options
+    client1 = io.connect base-url, options 
 
     client1.on 'initial', !(data)->
       cid1 := data.session.client
@@ -29,7 +27,6 @@ describe '能够通过session区分不同的用户', !->
       console.log 'client1 request1 answer data: ', data
       data.session.client.should.eql cid1
 
-      <-! patch.patch-io-client-with-session base-url
       client2 = io.connect base-url, options
       client2.on 'initial', !(data)->
         cid2 := data.session.client
