@@ -9,7 +9,7 @@ module.exports = (grunt)->
         options:
           banner: '''
 io = require 'socket.io-client'
-# patch = require './patch-io-client-with-session'
+patch = require './patch-io-client-with-session'
 require! {should, async, _: underscore}
 
 base-url = 'http://localhost:3000'

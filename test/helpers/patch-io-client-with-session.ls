@@ -1,7 +1,22 @@
+# 给socket.io-client打补丁，以实现cookie-based session
+
+require! 'request'
+j = null
+# intial request to trigger express connect session
+initial-session = !(j, url, callback)->
+  request.get {
+    jar: j 
+    url: url
+    }, !(err, resp, body)->
+      if err
+        console.log err 
+      else
+        callback!
+
+
 module.exports =
   patch-io-client-with-session: !(base-url, callback)->
-    require! 'request'
-    j = request.jar!
+    j := request.jar!
     old-request = require('socket.io-client/node_modules/xmlhttprequest').XMLHttpRequest 
 
     #patch it!
@@ -14,18 +29,16 @@ module.exports =
       old-open = this.open
       this.open = !->
         old-open.apply this, arguments
-        cookie = j.get {url: base-url}
+        cookie =  j.get {url: base-url}
           .map (c)->
             c.name + "=" + c.value
           .join "; "
         this.setRequestHeader('cookie', cookie)
+        console.log "set cookie when open: ", cookie
 
-    # intial request to trigger express connect session
-    request.get {
-      jar: j
-      url: base-url
-      }, !(err, resp, body)->
-        if err
-          console.log err 
-        else
-          callback!
+    initial-session @j, base-url, callback
+
+
+    reset-session: !(callback)->
+      j := request.jar!
+      initial-session @j, base-url, callback
