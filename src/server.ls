@@ -34,11 +34,17 @@ function initial-at-plus-server
   io = socket.listen server.http-server
 
   io.on 'connection', (socket)->
-    socket.client = socket.client or Math.random!
-    socket.emit 'initial', session: client: socket.client
+    try-session-for-testing socket
 
-    socket.on 'request-1', !(data)->
-      socket.emit 'request-1-answer', session: client: socket.client
+  locations-channel.init io
+
+
+function try-session-for-testing socket
+  socket.client = socket.client or Math.random!
+  socket.emit 'initial', session: client: socket.client
+
+  socket.on 'request-1', !(data)->
+    socket.emit 'request-1-answer', session: client: socket.client
   # users-channal.init io
   # interesting-points-channel.init io
   # circles-channel.init io

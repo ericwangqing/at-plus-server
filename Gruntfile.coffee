@@ -10,7 +10,7 @@ module.exports = (grunt)->
           banner: '''
 io = require 'socket.io-client'
 # patch = require './patch-io-client-with-session'
-require! should
+require! {should, async, _: underscore}
 
 base-url = 'http://localhost:3000'
 options = 
