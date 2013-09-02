@@ -1,5 +1,5 @@
 require! [express, http, path, jade, 'socket.io', 'connect',
-  './locations-channel', './interesting-points-channel', './config', './session']
+  './locations-channel', './interesting-points-channel', './config', './session-store']
 
 port = process.env.PORT or config.server.port 
 
@@ -9,6 +9,7 @@ start-at-plus-server!
  
 function configure-at-plus-server
   server = express!
+  session-store.config config.session-store
   server.configure ->
     server.set 'port', port
     server.use server.router
@@ -20,12 +21,15 @@ function configure-at-plus-server
   server.get '/', !(req, res)-> # test page 
     res.sendfile __dirname + '/index.html'
 
+
 function initial-at-plus-server
   server.http-server = http.createServer server # 需要用http server包装一下，才能正确初始化socket.io
   io = socket.listen server.http-server
 
   io.on 'connection', (socket)->
-    (session.get-session socket).message = 'Good'
+    (session) <-! session-store.get-session socket
+    session.message = 'Good'
+    <-! session.save
     try-session-for-testing socket
 
   locations-channel.init io

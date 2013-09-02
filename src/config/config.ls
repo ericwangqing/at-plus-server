@@ -10,3 +10,6 @@ module.exports <<<
     port: 27017
     db: \at-plus-test
     collections: ['interesting-points', 'locations'] 
+  session-store:
+    # session-store-type: 'redis' # in-memory | redis
+    session-store-type: 'in-momery' # in-memory | redis

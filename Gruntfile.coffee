@@ -63,7 +63,7 @@ can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为
       options:
         # require: 'should' # use should in tests without requiring in each
         reporter: 'spec'
-        slow: 200
+        slow: 100
         timeout: 1000
     watch:
       src:
