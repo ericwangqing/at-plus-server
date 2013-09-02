@@ -15,7 +15,7 @@ require! {should, async, _: underscore}
 base-url = 'http://localhost:3000'
 options = 
   transports: ['websocket']
-  'force new connection': true
+  # 'force new connection': true
 
 can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为can
 
