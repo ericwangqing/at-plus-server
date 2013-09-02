@@ -40,7 +40,9 @@ describe '能够在同一用户连接多个channel时，保持数据正确', !->
     client1 = io.connect base-url, options
     client2 = io.connect base-url + '/locations', options
     client1.socket.sessionid.should.eql client2.socket.sessionid
-    done!
+    client2.on 'ready', !(data)->
+      console.log 'data of connected to /locations: ', data
+      done!
 
   can '在多个channels间分享用户数据', !(done)->
     n1 = n2 = null

@@ -1,5 +1,5 @@
 require! [express, http, path, jade, 'socket.io', 'connect',
-  './locations-channel', './interesting-points-channel', './config']
+  './locations-channel', './interesting-points-channel', './config', './session']
 
 port = process.env.PORT or config.server.port 
 
@@ -25,6 +25,7 @@ function initial-at-plus-server
   io = socket.listen server.http-server
 
   io.on 'connection', (socket)->
+    (session.get-session socket).message = 'Good'
     try-session-for-testing socket
 
   locations-channel.init io
@@ -39,4 +40,4 @@ function try-session-for-testing socket
 
 function start-at-plus-server
   server.http-server.listen port, ->
-    console.log "at-plus is listening on port #{port}"  
+    console.log "at-plus is listening on port #{port}" 

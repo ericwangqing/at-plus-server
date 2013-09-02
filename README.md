@@ -1,5 +1,7 @@
 at-plus-server
 ==============
-@+ server新架构，基于socket.io和Pub-Sub模式。
+@+ server新架构，基于socket.io和Pub-Sub模式。使用Redis存储session data（便于将来scale out），未来Redis还可以作为高速缓存。
 
-为了BDD，需要patch现在的socket.io-client。目前需要进入/node_modules/socket.io-client/node_modules/xmlhttprequest/lib/XMLHttpRequest.js 将其中forbiddenRequestHeaders的cookie注释掉。
+Install and Run
+---------------
+安装mongoDB和Redis，运行之。
