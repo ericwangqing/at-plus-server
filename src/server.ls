@@ -1,8 +1,6 @@
 require! [express, http, path, jade, 'socket.io', 'connect',
   './locations-channel', './interesting-points-channel', './config']
 
-SessionSockets = require 'session.socket.io'
-
 port = process.env.PORT or config.server.port 
 
 server = configure-at-plus-server!
@@ -19,8 +17,8 @@ function configure-at-plus-server
   server.configure 'development', -> 
     server.use express.errorHandler!
 
-server.get '/', !(req, res)-> # test page 
-  res.sendfile __dirname + '/index.html'
+  server.get '/', !(req, res)-> # test page 
+    res.sendfile __dirname + '/index.html'
 
 function initial-at-plus-server
   server.http-server = http.createServer server # 需要用http server包装一下，才能正确初始化socket.io
@@ -33,21 +31,11 @@ function initial-at-plus-server
 
 
 function try-session-for-testing socket
-  socket.client = socket.client or Math.random!
-  socket.emit 'initial', session: client: socket.client
+  socket.number = socket.number or Math.random!
+  socket.emit 'initial', number: socket.number
 
   socket.on 'request-1', !(data)->
-    socket.emit 'request-1-answer', session: client: socket.client
-  # users-channal.init io
-  # interesting-points-channel.init io
-  # circles-channel.init io
-  # nitification-channel.init io
-  # do
-  #   (location) <-! locations-channel.init io
-  #   # (user) <-! users-channel.init io, location
-  #   interesting-points-channel.init location, user = null, io 
-  #   # chats-channel.init location, user, io
-  #   # notifications-channel.init location, user, io
+    socket.emit 'request-1-answer', number: socket.number
 
 function start-at-plus-server
   server.http-server.listen port, ->
