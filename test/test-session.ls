@@ -49,7 +49,7 @@ describe '测试@+为socket.io添加的session', !->
             m1 := data.message
             callback!
         !(callback)->
-          client2 = io.connect base-url + '/locations' 
+          client2 = io.connect base-url + '/locations' # 不给options，默认情况下'force new connection'为false
           client2.on 'ready', !(data)->
             # console.log "a) client2: ", client2.socket.sessionid
             # console.log "a) client2 on ready with data: ", data
@@ -76,5 +76,23 @@ describe '测试@+为socket.io添加的session', !->
           cid1.should.eql cid2
           done!
 
-    # can 'c) 不同channel可以各自使用自己的数据', !(done)->
-    #   done!  
+    can 'c) 不同channel可以各自使用自己的数据', !(done)->
+      n1 = n2 = null
+      async.parallel [
+        !(callback)->
+          client1 = io.connect base-url, options
+          client1.on 'request-1-answer', !(data)->
+            # console.log "a) client1: ", client1.socket.sessionid
+            n1 := data.number
+            callback!
+          client1.emit 'request-1'
+        !(callback)->
+          client2 = io.connect base-url + '/locations' 
+          client2.on 'request-1-answer', !(data)->
+            # console.log "a) client1: ", client1.socket.sessionid
+            n2 := data.number
+            callback!
+          client2.emit 'request-1'
+        ], !->
+          n1.should.not.eql n2
+          done!
