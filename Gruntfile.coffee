@@ -9,13 +9,14 @@ module.exports = (grunt)->
         options:
           banner: '''
 io = require 'socket.io-client'
-patch = require './patch-io-client-with-session'
+# patch = require './patch-io-client-with-session'
 require! {should, async, _: underscore}
 
 base-url = 'http://localhost:3000'
 options = 
   transports: ['websocket']
-  # 'force new connection': true
+  'force new connection': true
+  'reconnect': false
 
 can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为can
 
@@ -64,26 +65,26 @@ can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为
         # require: 'should' # use should in tests without requiring in each
         reporter: 'spec'
         slow: 100
-        timeout: 1000
+        timeout: 3000
     watch:
       src:
         files: ["src/**/*.ls"]
-        tasks: ["copy", "livescript:src",  "delayed-simplemocha"]
+        tasks: ["copy", "livescript:src",  "simplemocha"]
         options:
-          livereload: true
+          spawn: true
       test_compile:
         files: ["test/**/*.ls"]
         tasks: ["concat", "livescript:test", "livescript:test_helper", "simplemocha"]
-    nodemon:
-      all:
-        options: 
-          watchedFolders: ['bin']
-    concurrent:
-      target: 
-        tasks:
-          ['watch', 'nodemon']
-        options:
-          logConcurrentOutput: true
+    # nodemon:
+    #   all:
+    #     options: 
+    #       watchedFolders: ['bin']
+    # concurrent:
+    #   target: 
+    #     tasks:
+    #       ['watch', 'nodemon']
+    #     options:
+    #       logConcurrentOutput: true
 
   grunt.loadNpmTasks "grunt-livescript"
   grunt.loadNpmTasks "grunt-simple-mocha"
@@ -95,7 +96,7 @@ can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-concat"
 
-  grunt.registerTask "default", ["clean", "copy", "concat", "livescript", "concurrent:target"]
+  grunt.registerTask "default", ["clean", "copy", "concat", "livescript", "watch"]
   grunt.registerTask "test", ["simplemocha"]
 
 
