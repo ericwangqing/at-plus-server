@@ -4,7 +4,6 @@ require! [express, http, path, jade, 'socket.io', 'connect',
 port = process.env.PORT or config.server.port 
  
 server = null
-socket-list = []
 configure-at-plus-server = !->
   server := express!
   session-store.config config.session-store
@@ -23,22 +22,13 @@ configure-at-plus-server = !->
 initial-at-plus-server = !(callback)->
   server.http-server = http.createServer server # 需要用http server包装一下，才能正确初始化socket.io
   io = socket.listen server.http-server
-  # console.log "io: ", io
-  # io.set 'close timeout', 0.01 
 
   io.on 'connection', (socket)->
     # ！！以下两方法用于测试，正式发布时应当去除
-    track-socket socket
     <-! try-session-data socket
     try-socket-data socket
 
   locations-channel.init io, callback
-
-track-socket = !(socket)->
-  socket-list.push socket
-  socket.on 'close', !->
-    console.log "socket: #{socket.id} closed"
-    socket-list.splice socket-list.index-of(socket), 1
 
 try-session-data = !(socket, next)->
   (session) <-! session-store.get-session socket
@@ -62,9 +52,7 @@ module.exports =
     initial-at-plus-server ->
       server.http-server.listen port, ->
         console.log "at-plus is listening on port #{port}" 
-        done! if done
+        done! if done 
   shutdown: !->
     console.log "****************** close server **********************" 
-    for socket in socket-list
-      socket.disconnect!
     server.http-server.close!

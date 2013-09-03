@@ -14,7 +14,7 @@ require! {should, async, _: underscore}
 
 base-url = 'http://localhost:3000'
 options = 
-  transports: ['websocket']
+  # transports: ['websocket']
   'force new connection': true
   'reconnect': false
 
@@ -69,22 +69,23 @@ can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为
     watch:
       src:
         files: ["src/**/*.ls"]
-        tasks: ["copy", "livescript:src",  "simplemocha"]
+        tasks: ["copy", "livescript:src",  "delayed-simplemocha"]
         options:
           spawn: true
       test_compile:
         files: ["test/**/*.ls"]
         tasks: ["concat", "livescript:test", "livescript:test_helper", "simplemocha"]
-    # nodemon:
-    #   all:
-    #     options: 
-    #       watchedFolders: ['bin']
-    # concurrent:
-    #   target: 
-    #     tasks:
-    #       ['watch', 'nodemon']
-    #     options:
-    #       logConcurrentOutput: true
+    nodemon:
+      all:
+        options: 
+          file: 'bin/app.js'
+          watchedFolders: ['bin']
+    concurrent:
+      target: 
+        tasks:
+          ['watch', 'nodemon']
+        options:
+          logConcurrentOutput: true
 
   grunt.loadNpmTasks "grunt-livescript"
   grunt.loadNpmTasks "grunt-simple-mocha"
@@ -96,7 +97,7 @@ can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-concat"
 
-  grunt.registerTask "default", ["clean", "copy", "concat", "livescript", "watch"]
+  grunt.registerTask "default", ["clean", "copy", "concat", "livescript", "concurrent"]
   grunt.registerTask "test", ["simplemocha"]
 
 
