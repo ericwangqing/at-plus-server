@@ -1,8 +1,9 @@
 require! ['./interesting-points-manager', './session-store']
-locations-manager = 
-  init: (io, callback)->
-    do
-      (socket) <-! io.of('/locations').on 'connection'
+module.exports  = 
+  init: !(io)->
+    locations-channel = io.of('/locations')
+
+    locations-channel.on 'connection', !(socket)->
       socket.number = socket.number or Math.random!
       console.info 'locations channel connected'
       (session) <-! session-store.get-session socket
@@ -17,7 +18,3 @@ locations-manager =
         message: session.message
         number: socket.number
 
-    callback!
-
-
-module.exports <<< locations-manager 

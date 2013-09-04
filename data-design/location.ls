@@ -7,7 +7,7 @@ location =
     from: '2014-02-04 12:00:04'
     to: '2014-02-04 12:00:04' # 第一次报告这个location时from与to相同，之后，to是最后一次报告的时间
   is-internal: false # default 不能够从公网被访问的内网网页，需要permission才能够进入的区域
-  url: # url, only available when the type is web
+  urls: [] # url, only available when the type is web, 同一网页可能有多个网址对应。今后这部分可能单独做出一个key-value的应用来进行甑别。
   retrieved-html: '<html> ... </html>'
   web-page-snapshot: '/web-page-snapshot/_id' # 网页的快照，用于定位兴趣点（现在未必有用，但是将来会有用）
   # the following properties only available when the type is real

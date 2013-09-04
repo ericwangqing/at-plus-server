@@ -96,3 +96,5 @@ describe '测试@+为socket.io添加的session', !->
         ], !->
           n1.should.not.eql n2
           done!
+
+          
