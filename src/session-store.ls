@@ -5,13 +5,15 @@
 require! redis
 
 session-store-type = 'in-momery'
-redis-store = redis.create-client()
+redis-store = null
 in-momery-session-store = {}
 
 module.exports = 
   config: !(cfg)->
     if cfg.session-store-type in ['in-momery', 'redis']
       session-store-type := cfg.session-store-type
+    redis-store = redis.create-client() if cfg.session-store-type is 'redis'
+
   get-session: !(socket, callback)->
     console.log 'session-store-type: ', session-store-type
     if session-store-type is 'redis'
@@ -28,8 +30,8 @@ module.exports =
                 done!
         callback session
     else if session-store-type is 'in-momery'
-      session = in-momery-session-store['scoket.id'] or {}
+      session = in-momery-session-store[socket.id] or {}
       session.save = !(done)->
-        in-momery-session-store['scoket.id'] = session
+        in-momery-session-store[socket.id] = session
         done! 
       callback session

@@ -43,7 +43,7 @@ describe '测试@+为socket.io添加的session', !->
       m1 = m2 = null
       async.parallel [
         !(callback)->
-          client1 = io.connect base-url, options
+          client1 = io.connect base-url
           client1.on 'initial', !(data)->
             # console.log "a) client1: ", client1.socket.sessionid
             m1 := data.message
