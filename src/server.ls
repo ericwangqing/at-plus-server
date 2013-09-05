@@ -29,6 +29,20 @@ initial-at-plus-server = !->
   interesting-points-channel.init io
   chats-channel.init io
 
+patch-io-socket-with-accross-namespaces-session =!-> 
+  SocketNamespace = require 'socket.io/lib/namespace.js'  
+  SocketNamespace.prototype.on = !(event, listener)->
+    if event is 'connection'
+      new-listener = !->
+        socket = arguments[0]
+        session-store.get-session socket, !(session)->
+          socket.session = session
+          # console.log "captuer connection evnet at socket: ", socket.session
+        listener.apply listener, arguments
+    process.EventEmitter.prototype.on.call this, event, new-listener
+
+patch-io-socket-with-accross-namespaces-session!
+
 module.exports =
   start: !(done)->
     console.log "****************** start server **********************"

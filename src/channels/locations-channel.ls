@@ -6,15 +6,14 @@ module.exports  =
     locations-channel.on 'connection', !(socket)->
       socket.number = socket.number or Math.random!
       console.info 'locations channel connected'
-      (session) <-! session-store.get-session socket
-      session.message = session.message or Math.random!
-      <-! session.save
+      socket.session.message = socket.session.message or Math.random!
+      <-! socket.session.save
       socket.on 'request-1', !(data)->
         socket.emit 'request-1-answer',
-          message: session.message
+          message: socket.session.message
           number: socket.number
 
       socket.emit 'ready', 
-        message: session.message
-        number: socket.number
+        message: socket.session.message
+        number: socket.number 
 
