@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>130</x>
+      <y>350</y>
+      <w>266</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+.
+.
+in 'response-initial' handler: 
+on 'xxx': emit 'ooo', 'ooo-data'
+所有业务逻辑在这里描述……</panel_attributes>
+    <additional_attributes>240;220;140;220;140;30;240;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>590</x>
+      <y>90</y>
+      <w>432</w>
+      <h>590</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+.
+.
+.
+on 'connection': 
+register 'request-initial' handler (initial-data)</panel_attributes>
+    <additional_attributes>30;570;260;570;260;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>260</x>
+      <y>70</y>
+      <w>148</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+io.connect ....</panel_attributes>
+    <additional_attributes>110;70;80;70;80;30;110;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>300</x>
+      <y>140</y>
+      <w>386</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=..
+&lt;&lt; socket.io handsake and make connection&gt;&gt;</panel_attributes>
+    <additional_attributes>90;50;300;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>350</x>
+      <y>30</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;60</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>600</x>
+      <y>90</y>
+      <w>20</w>
+      <h>680</h>
+    </coordinates>
+    <panel_attributes>bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>590</x>
+      <y>100</y>
+      <w>278</w>
+      <h>330</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+in 'request-initial' handler:
+register 'xxx' handler (xxx-data)
+register 'ooo' handler (ooo-data)
+...
+emit 'reponse-initial'</panel_attributes>
+    <additional_attributes>30;310;140;310;140;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>560</x>
+      <y>30</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_:Server_
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>580</x>
+      <y>30</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;60</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>330</x>
+      <y>30</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_:Client_
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>370</x>
+      <y>90</y>
+      <w>20</w>
+      <h>680</h>
+    </coordinates>
+    <panel_attributes>bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>0</x>
+      <y>130</y>
+      <w>390</w>
+      <h>560</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+on.connect: 
+register 'response-initial' handler
+emit 'request-initial', initial-data</panel_attributes>
+    <additional_attributes>370;540;150;540;150;30;370;30</additional_attributes>
+  </element>
+</diagram>

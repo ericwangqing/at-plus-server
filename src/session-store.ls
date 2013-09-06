@@ -23,19 +23,26 @@ Session.prototype.save = !(callback)->
 
 Session.prototype.restore-previous = !(previous-socket-id, callback)->
   if session-store-type is 'redis'
-      callback! if not previous-socket-id
-      redis-store.get previous-socket-id, !(err, result)~>
-        if err
-          console.log "can't find previous session #{previous-socket-id} from redis, with err: ", err
-          callback err, result
-        else
-          callback! if not result
-          @ <<< JSON.parse(result)
-          (err, result) <-! redis-store.set @sid, (JSON.stringify @) 
-          callback err, result if err
-          (err, result) <-! redis-store.del previous-socket-id
-          callback err, result if err
-          callback null, null
+      if not previous-socket-id
+        callback!
+      else 
+        redis-store.get previous-socket-id, !(err, result)~>
+          if err
+            console.log "can't find previous session #{previous-socket-id} from redis, with err: ", err
+            callback err, result
+          else if not result
+            callback!
+          else
+            @ <<< JSON.parse(result)
+            (err, result) <-! redis-store.set @sid, (JSON.stringify @) 
+            if err
+              callback err, result
+            else
+              (err, result) <-! redis-store.del previous-socket-id
+              if err
+                callback err, result
+              else
+                callback null, null
   else if session-store-type is 'in-momery'
     if previous-socket-id
       @ <<< in-momery-session-store[@.sid] = in-momery-session-store[previous-socket-id]

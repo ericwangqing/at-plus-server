@@ -4,7 +4,7 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>440</x>
+      <x>730</x>
       <y>210</y>
       <w>174</w>
       <h>90</h>
@@ -16,7 +16,7 @@ sub. on locations</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>30</x>
+      <x>320</x>
       <y>180</y>
       <w>480</w>
       <h>94</h>
@@ -29,7 +29,7 @@ locations: urls</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>0</x>
+      <x>290</x>
       <y>10</y>
       <w>100</w>
       <h>30</h>
@@ -41,10 +41,10 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>40</x>
+      <x>330</x>
       <y>70</y>
       <w>20</w>
-      <h>540</h>
+      <h>680</h>
     </coordinates>
     <panel_attributes>bg=orange</panel_attributes>
     <additional_attributes/>
@@ -52,20 +52,20 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>400</x>
+      <x>660</x>
       <y>60</y>
-      <w>258</w>
+      <w>312</w>
       <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;
-establish session from @+sid</panel_attributes>
-    <additional_attributes>110;70;130;70;130;30;110;30</additional_attributes>
+establish/restore session from @+sid</panel_attributes>
+    <additional_attributes>140;70;160;70;160;30;140;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>30</x>
-      <y>480</y>
+      <x>320</x>
+      <y>620</y>
       <w>480</w>
       <h>70</h>
     </coordinates>
@@ -76,8 +76,8 @@ establish session from @+sid</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>450</x>
-      <y>510</y>
+      <x>740</x>
+      <y>650</y>
       <w>148</w>
       <h>90</h>
     </coordinates>
@@ -88,7 +88,7 @@ sub. on users</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>450</x>
+      <x>740</x>
       <y>10</y>
       <w>100</w>
       <h>30</h>
@@ -100,7 +100,7 @@ bg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>30</x>
+      <x>320</x>
       <y>30</y>
       <w>480</w>
       <h>94</h>
@@ -113,7 +113,20 @@ bg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>410</x>
+      <x>320</x>
+      <y>680</y>
+      <w>480</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+response-initial
+friends</panel_attributes>
+    <additional_attributes>460;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>700</x>
       <y>370</y>
       <w>230</w>
       <h>90</h>
@@ -125,10 +138,10 @@ sub. on interesing-points</panel_attributes>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>490</x>
+      <x>780</x>
       <y>70</y>
       <w>20</w>
-      <h>530</h>
+      <h>680</h>
     </coordinates>
     <panel_attributes>bg=red</panel_attributes>
     <additional_attributes/>
@@ -136,7 +149,7 @@ sub. on interesing-points</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>30</x>
+      <x>320</x>
       <y>240</y>
       <w>480</w>
       <h>94</h>
@@ -149,22 +162,22 @@ locations with interesting-points</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>30</x>
+      <x>320</x>
       <y>100</y>
       <w>480</w>
       <h>94</h>
     </coordinates>
     <panel_attributes>lt=&gt;
 response-initial
-friends, hots, circls, listens, my-history
+my-history
 </panel_attributes>
     <additional_attributes>460;50;30;50</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>30</x>
-      <y>410</y>
+      <x>320</x>
+      <y>490</y>
       <w>480</w>
       <h>70</h>
     </coordinates>
@@ -175,7 +188,7 @@ friends, hots, circls, listens, my-history
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>30</x>
+      <x>320</x>
       <y>340</y>
       <w>480</w>
       <h>70</h>
@@ -188,8 +201,21 @@ friends, hots, circls, listens, my-history
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>450</x>
-      <y>440</y>
+      <x>320</x>
+      <y>400</y>
+      <w>480</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+response-initial
+hots, circles</panel_attributes>
+    <additional_attributes>460;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>740</x>
+      <y>520</y>
       <w>148</w>
       <h>90</h>
     </coordinates>
@@ -200,7 +226,20 @@ sub. on chats</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>20</x>
+      <x>320</x>
+      <y>550</y>
+      <w>480</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+response-initial
+chats</panel_attributes>
+    <additional_attributes>460;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>310</x>
       <y>10</y>
       <w>50</w>
       <h>80</h>
@@ -211,7 +250,7 @@ sub. on chats</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>470</x>
+      <x>760</x>
       <y>10</y>
       <w>50</w>
       <h>80</h>

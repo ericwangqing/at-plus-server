@@ -1,25 +1,23 @@
+require! './channels-helper'
 module.exports = 
   init: !(io)->
-    default-channel = io.on 'connection', !(socket)->
-      socket.on 'request-initial', (data)->
-        sid = data?.sid
-        (err, result) <-! socket.session.restore-previous sid
+    channels-helper.channel-initial-wrapper {
+      io: io
 
-        socket.emit 'response-initial', 
+      request-initial-hanlder: !(socket, data, callback)->
+        sid = data?.sid
+        socket.session.restore-previous sid, callback
+
+      response-initial-data-getter: !(socket, data, callback)->
+        callback {
           sid: socket.session.sid or socket.id
           message: socket.session.message
-          # friends: user-manager.get-all-friends socket.session.uid
-          # hots: interesting-manager.get-hots
-          # circls: interesting-manager.get-circls-updates socket.session.uid
-          # listens: 
-          #   users-updates: interesting-manager.get-users-updates user-manager.get-listened-users sockect.session.uid
-          #   interesting-points-updates: interesting-manager.get-listend-interesting-points-updates
-          # history: interesting-manager.get-my-history socket.session.uid
+        }
 
-      for-session-testing socket
-      socket.emit 'ready',  
-        message: 'locations-channel initialized, ready for events' 
-
+      business-handlers: !(socket, data, callback)->
+        for-session-testing socket
+        callback!
+    }
 
 for-session-testing = !(socket)->  # these handler are used in session-testing, and should be removed in future
   <-! try-session-data socket  
