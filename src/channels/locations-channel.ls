@@ -1,19 +1,20 @@
-require! ['./interesting-points-manager', './session-store']
+require! ['./interesting-points-manager']
 module.exports  = 
   init: !(io)->
-    locations-channel = io.of('/locations')
+    io.of('/locations').on 'connection', !(socket)->
+      for-session-testing socket
 
-    locations-channel.on 'connection', !(socket)->
-      socket.number = socket.number or Math.random!
-      console.info 'locations channel connected'
-      socket.session.message = socket.session.message or Math.random!
-      <-! socket.session.save
-      socket.on 'request-1', !(data)->
-        socket.emit 'request-1-answer',
-          message: socket.session.message
-          number: socket.number
+function for-session-testing socket  # these handler are used in session-testing, and should be removed in future
+  socket.number = socket.number or Math.random!
+  console.info 'locations channel connected'
+  socket.session.message = socket.session.message or Math.random!
+  # <-! socket.session.save
+  console.log "***************** session: ", socket.session
+  socket.on 'request-1', !(data)->
+    socket.emit 'request-1-answer',
+      message: socket.session.message
+      number: socket.number
 
-      socket.emit 'ready', 
-        message: socket.session.message
-        number: socket.number 
-
+  socket.emit 'ready',  
+    message: socket.session.message 
+    number: socket.number 
