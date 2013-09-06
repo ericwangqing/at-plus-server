@@ -19,11 +19,10 @@ Session.prototype.save = !(callback)->
       callback err, result
   else if session-store-type is 'in-momery'
     in-momery-session-store[@sid] = @
-    callback! 
+    callback null, null
 
 Session.prototype.restore-previous = !(previous-socket-id, callback)->
   if session-store-type is 'redis'
-      console.log "previous-socket-id: ", previous-socket-id
       callback! if not previous-socket-id
       redis-store.get previous-socket-id, !(err, result)~>
         if err
@@ -31,21 +30,17 @@ Session.prototype.restore-previous = !(previous-socket-id, callback)->
           callback err, result
         else
           callback! if not result
-          console.log('@ befoer <<<:', @)
           @ <<< JSON.parse(result)
-          console.log('@ after <<<:', @)
           (err, result) <-! redis-store.set @sid, (JSON.stringify @) 
           callback err, result if err
           (err, result) <-! redis-store.del previous-socket-id
-          callback err, result
+          callback err, result if err
+          callback null, null
   else if session-store-type is 'in-momery'
-    console.log "pre: in-momery-session-store[#{previous-socket-id}]: ", in-momery-session-store[previous-socket-id]
-    console.log "socket: in-momery-session-store[#{@sid}]: ", in-momery-session-store[@sid]
     if previous-socket-id
       @ <<< in-momery-session-store[@.sid] = in-momery-session-store[previous-socket-id]
       delete in-momery-session-store[previous-socket-id]
-    console.log "socket: in-momery-session-store[#{@sid}]: ", in-momery-session-store[@sid]
-    callback!
+    callback null, null
 
 module.exports = 
   config: !(cfg)->
@@ -53,16 +48,16 @@ module.exports =
       session-store-type := cfg.session-store-type
     redis-store := redis.create-client() if cfg.session-store-type is 'redis'
 
-  get-session: (socket, callback)-> # sid likes cookie, which is stored by client, and provide in request. It is used to implement peresist session across multiple running of the client.
+  get-session: !(socket, callback)-> # sid likes cookie, which is stored by client, and provide in request. It is used to implement peresist session across multiple running of the client.
     session = new Session socket.id
     if session-store-type is 'redis'
       redis-store.get session.sid, !(err, result)->
         if err
           console.log "can't retrive #{@sid} from redis, with err: ", err
+          callback err, result
         else
-          console.log "get session #{result}"
           session <<< ((JSON.parse result) or {} )
-          callback session
+          callback null, session
     else if session-store-type is 'in-momery'
       session <<< (in-momery-session-store[session.sid] or {})
-      callback session
+      callback null, session

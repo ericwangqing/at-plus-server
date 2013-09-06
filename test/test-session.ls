@@ -1,3 +1,4 @@
+require! '../bin/server'
 describe '测试@+为socket.io添加的session', !->
   before-each !->
     (require 'socket.io-client/lib/io.js').sockets = {} # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
@@ -49,15 +50,12 @@ describe '测试@+为socket.io添加的session', !->
           client1 = io.connect base-url
           client1.on 'connect', !(data)->
             client1.on 'initial', !(data)->
-              console.log "a) client1: ", client1.socket.sessionid
               m1 := data.message
               callback!
         !(callback)->
           client2 = io.connect base-url + '/locations' # 不给options，默认情况下'force new connection'为false
           client2.on 'connect', !(data)->
             client2.on 'ready', !(data)->
-              console.log "a) client2: ", client2.socket.sessionid
-              console.log "a) client2 on ready with data: ", data
               m2 := data.message
               callback!
         ], !->
@@ -88,22 +86,18 @@ describe '测试@+为socket.io添加的session', !->
       async.parallel [
         !(callback)->
           client1 = io.connect base-url
-          client1.on 'connect', !(data)->
+          client1.on 'ready', !(data)->
             client1.on 'request-1-answer', !(data)->
-              console.log "a) client1: ", client1.socket.sessionid
               n1 := data.number
               callback!
             client1.emit 'request-1'
-            console.log 'client 1 emit request-1'
         !(callback)-> 
-          client2 = io.connect base-url + '/locations' 
-          client2.on 'connect', !(data)->
+          client2 = io.connect base-url + '/locations'
+          client2.on 'ready', !(data)->
             client2.on 'request-1-answer', !(data)->
-              console.log "a) client12: ", client2.socket.sessionid
               n2 := data.number
               callback!
             client2.emit 'request-1'
-            console.log 'client 2 emit request-1'
         ], !->
           n1.should.not.eql n2
           done! 
@@ -111,22 +105,18 @@ describe '测试@+为socket.io添加的session', !->
     can 'd) 客户端的两次连接时，如果保存了sid，则可以恢复上一次的状态', !(done)->
       sid = message = null
       client1 = io.connect base-url, options
-      client1.on 'connect', !(data)->
+      client1.on 'ready', !(data)->
         client1.on 'response-initial', !(data)->
-          console.log '------------ client1 response to initial with data: ', data 
           sid := data.sid
           message := data.message
           client1.disconnect!
           client2 =  io.connect base-url, options
-          client2.on 'connect', !(data)->
+          client2.on 'ready', !(data)->
             client2.on 'response-initial', !(data)->
-              console.log '=========== client2 response to initial with data: ', data 
               data.message.should.eql message
               done!
             client2.emit 'request-initial', sid: sid
-            console.log '=========== request-initial'
         client1.emit 'request-initial', null
-        console.log '------------ request-initial'
 
 
 

@@ -69,7 +69,7 @@ can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为
     watch:
       src:
         files: ["src/**/*.ls"]
-        tasks: ["copy", "livescript:src",  "delayed-simplemocha"]
+        tasks: ["copy", "livescript:src",  "simplemocha"]
         options:
           spawn: true
       test_compile:
@@ -103,7 +103,7 @@ can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为
 
   grunt.registerTask 'delayed-simplemocha', "run mocha 1000ms later", ->
     done = this.async()
-    DELAY = 2000
+    DELAY = 1000
     grunt.log.writeln 'run mocha after %dms', DELAY
     setTimeout (->
       grunt.task.run 'simplemocha'
