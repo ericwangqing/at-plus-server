@@ -38,14 +38,12 @@ patch-socket-with-accross-namespaces-session = !->
     new-listener = !->
       debug "***************** capture #{event} at #{@.id} **********************"
       if !@session
-        session-store.get-session @, !(err, result)~>
-          if err
-            console.log "can't get session for #{@id}, error: ", err
-          else
-            debug "result: ", result
-            @session = result
-      debug "socket #{@id} session is: ", @session
+        session-store.get @.id, !(session)~>
+          @session = session
+          debug "get socket #{@id} session is: ", @session
       listener.apply listener, arguments
+      session-store.set @.id, @session, !(session)~>
+        debug "set socket #{@id} session is: " @session
     process.EventEmitter.prototype.on.call @, event, new-listener
 
 patch-socket-with-accross-namespaces-session!

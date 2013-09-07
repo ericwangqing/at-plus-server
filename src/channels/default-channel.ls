@@ -1,7 +1,8 @@
-require! './channels-helper'
+debug = require('debug')('at-plus')
+require! ['./channels-initial-helper', './session-store']
 module.exports = 
   init: !(io)->
-    channels-helper.channel-initial-wrapper {
+    channels-initial-helper.channel-initial-wrapper {
       channel: io
 
       session-socket-handler: !(socket, data, callback)->
@@ -9,10 +10,12 @@ module.exports =
         socket.number = socket.number or Math.random!
 
         if data and  data.sid
-          socket.session.restore-previous socket, callback
+          session-store.restore socket.id, data.sid, !(found-session)->
+            socket.session = found-session
+            callback!
         else
           socket.session.message = socket.session.message or Math.random!
-          socket.session.save callback
+          callback!
 
       response-initial-data-getter: !(socket, data, callback)->
         callback err = null, {
