@@ -11,8 +11,8 @@ get-safe-method = (method)->
   method or safe-method
 
 safe-obj = ->
-  io: null
-  request-initial-hanlder: safe-method
+  channel: null
+  session-socket-handler: safe-method
   business-handlers: safe-method
   response-initial-data-getter: safe-method
 
@@ -22,12 +22,18 @@ safe-method = !->
 module.exports = 
   channel-initial-wrapper: !(obj)->
     obj = get-safe-obj obj
-    obj.io.on 'connection', !(socket)->
-      (data) <-! socket.on 'request-initial'
-      (err, result) <-! obj.request-initial-hanlder socket, data 
-      (err, result) <-! obj.business-handlers socket, data # bussniess-handler、response-initial-data-getter可能都用不上data，加上data是为了API的整洁、漂亮
-      (err, result) <-! obj.response-initial-data-getter socket, data
-      socket.emit 'response-initial', result
+    obj.channel.on 'connection', !(socket)->
+      console.log 'server on connection, registering handlers'
+      do
+        (data) <-! socket.on 'request-initial'
+        console.log 'server handle request-initial'
+        (err, result) <-! obj.session-socket-handler socket, data 
+        (err, result) <-! obj.business-handlers socket, data # bussniess-handler、response-initial-data-getter可能都用不上data，加上data是为了API的整洁、漂亮
+        (err, result) <-! obj.response-initial-data-getter socket, data
+        socket.emit 'response-initial', result
+        console.log 'server emit response-initial'
+      console.log 'server on connection, business-handlers session-socket-handler registered'
+
 
   client-initial-wrapper: !(obj)->
     client = obj.io.connect obj.url, obj.options
@@ -35,7 +41,9 @@ module.exports =
 
     <-! client.on 'connect'
     client.on 'response-initial', !(data)->
+      console.log 'client handle response-initial'
       (err, result) <-! (get-safe-method obj.business-handlers) client, data 
     (err, result) <-! (get-safe-method obj.resquest-initial-data-getter)
     client.emit 'request-initial'
+    console.log 'client emit request-initial'
 

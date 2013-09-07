@@ -1,3 +1,10 @@
+# ！！注意，在开发时，请注意观察控制台的输出，关注server restart的时机，如果在simplemocha之前，一切OK。
+# 否则，在simplemocha之后，才restart server，测试的结果将不是最新更改的情况。遇到这种状况，再次保存一下src
+# 触发grunt，看看是否能够顺序正常。
+# 原因：watch和nodemon分别定时扫描文件，因此二者可能一个早发现、一个晚发现，再加上二者的扫描间隔也有不同，
+# 就会导致触发complie和server restart的时间、次序随机不同。
+# 终极策略：将下面的TIME_WAIT_SERVER_RESTART调整到足够大。
+TIME_WAIT_SERVER_RESTART = 1000 # BE CAREFUL! May need more time for lower computers. !!
 module.exports = (grunt)->
   grunt.initConfig
     clean: ["bin", 'test-temp', 'test-bin']
@@ -7,25 +14,12 @@ module.exports = (grunt)->
     concat: # 将每个测试中都要用的部分抽出来
       prefix_test:
         options:
-          banner: '''
-io = require 'socket.io-client'
-# patch = require './patch-io-client-with-session'
-require! {should, async, _: underscore}
-
-base-url = 'http://localhost:3000'
-options = 
-  # transports: ['websocket']
-  'force new connection': true
-  'reconnect': false
-
-can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为can
-
-          '''
+          banner: require('fs').readFileSync('test/header.ls', {encoding: 'utf-8'})
         files: [
           expand: true # 将来改为在dev下的配置
           # flatten: true
           cwd: 'test'
-          src: ['**/*.ls', '!**/*patch*', '!**/*helper*']
+          src: ['**/*.ls', '!header.ls', '!**/*patch*', '!**/*helper*']
           dest: 'test-temp/'
           ext: '.ls'
         ]
@@ -80,10 +74,12 @@ can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为
         options: 
           file: 'bin/app.js'
           watchedFolders: ['bin']
+          env:
+            DEBUG: 'at-plus'
     concurrent:
       target: 
         tasks:
-          ['watch', 'nodemon']
+          ['nodemon', 'watch']
         options:
           logConcurrentOutput: true
 
@@ -101,9 +97,9 @@ can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为
   grunt.registerTask "test", ["simplemocha"]
 
 
-  grunt.registerTask 'delayed-simplemocha', "run mocha 100ms later", ->
+  grunt.registerTask 'delayed-simplemocha', "run mocha later for nodemon picks up changes", ->
     done = this.async()
-    DELAY = 100
+    DELAY = TIME_WAIT_SERVER_RESTART 
     grunt.log.writeln 'run mocha after %dms', DELAY
     setTimeout (->
       grunt.task.run 'simplemocha'

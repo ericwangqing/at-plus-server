@@ -1,90 +1,87 @@
-require! ['../bin/server', '../bin/channels-helper']
 describe '测试@+为socket.io添加的session', !->
   before-each !->
     (require 'socket.io-client/lib/io.js').sockets = {} # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
  
-  describe '能够通过session区分不同的用户', !->
+  # describe '能够通过session区分不同的用户', !->
     
-    can 'a) 在同一个用户多次请求之间保存状态', !(done)->
-      n = null
-      channels-helper.client-initial-wrapper {
-        io: io
-        url: base-url
-        options: options
-        business-handlers: !(client, data, callback)->
-          client.on 'initial', !(data)->
-            n := data.number
-            client.emit 'request-1', null
+  #   can 'a) 在同一个用户多次请求之间保存状态', !(done)->
+  #     n = null
+  #     request-server !(client, server-response-initial-data)->
+  #       console.log "client handle response-initial: ", server-response-initial-data
+  #       n := server-response-initial-data.number
 
-          client.on 'request-1-answer', !(data)->
-            data.number.should.eql n
-            done!
-          callback!
-      }
+  #       client.on 'request-1-answer', !(data)->
+  #         console.log "client handle request-1-answer: ", data
+  #         data.number.should.eql n
+  #         done!
+
+  #       client.emit 'request-1', null
+  #       console.log 'client emit request-1'
 
 
   #   can 'b) 能够区分多个用户的请求', !(done)-> # option中 'force new connection': true
   #     n1 = n2 = cid1 = cid2 = null
   #     async.parallel [
   #       !(callback)->
-  #         client1 = io.connect base-url, options  # 如果没有force new connection: true，将使用已有socket，无法区分
-  #         client1.on 'connect', !(data)->
-  #           client1.on 'initial', !(data)->
-  #             cid1 := client1.socket.sessionid
-  #             n1 := data.number
-  #             callback!
+  #         request-server !(client, server-response-initial-data)->
+  #           cid1 := client.socket.sessionid
+  #           n1 := server-response-initial-data.number
+  #           callback!
   #       !(callback)->
-  #         client2 = io.connect base-url, options 
-  #         client2.on 'connect', !(data)->
-  #           client2.on 'initial', !(data)->
-  #             cid2 := client2.socket.sessionid
-  #             n2 := data.number
-  #             callback!
+  #         request-server !(client, server-response-initial-data)->
+  #           cid2 := client.socket.sessionid
+  #           n2 := server-response-initial-data.number
+  #           callback!
   #       ], !->
   #         cid1.should.not.eql cid2 
   #         n2.should.not.eql n1
   #         done!
  
 
-  # describe '能够在同一用户连接多个channel时，保持数据正确', !->
+  describe '能够在同一用户连接多个channel时，保持数据正确', !->
 
-  #   can 'a) 在多个channels间分享用户数据', !(done)->
-  #     m1 = m2 = null
-  #     async.parallel [
-  #       !(callback)->
-  #         client1 = io.connect base-url
-  #         client1.on 'connect', !(data)->
-  #           client1.on 'initial', !(data)->
-  #             m1 := data.message
-  #             callback!
-  #       !(callback)->
-  #         client2 = io.connect base-url + '/locations' # 不给options，默认情况下'force new connection'为false
-  #         client2.on 'connect', !(data)->
-  #           client2.on 'ready', !(data)->
-  #             m2 := data.message
-  #             callback!
-  #       ], !->
-  #         m1.should.eql m2
-  #         done!
+    can 'a) 在多个channels间分享用户数据', !(done)->
+      m1 = m2 = null
+      async.parallel [
+        !(callback)->
+          request-server !(client, server-response-initial-data)->
+            m1 := server-response-initial-data.message
+            callback!
+          , 
+            options: 'force new connection': false
 
-  #   can 'b) 多个channels有同样的sessionid', !(done)->
-  #     cid1 = cid2 = null
-  #     async.parallel [
-  #       !(callback)->
-  #         client1 = io.connect base-url
-  #         client1.on 'connect', !(data)->
-  #           client1.on 'initial', !(data)->
-  #             cid1 := client1.socket.sessionid
-  #           callback!
-  #       !(callback)->
-  #         client2 = io.connect base-url + '/locations'
-  #         client2.on 'connect', !(data)->
-  #           client2.on 'ready', !(data)->
-  #             cid2 := client2.socket.sessionid
-  #             callback!
-  #       ], !->
-  #         cid1.should.eql cid2
-  #         done!
+        !(callback)->
+          request-server !(client)->
+            client.on 'request-1-answer', !(data)->
+              m2 := data.message
+              callback!
+            client.emit 'request-1'
+          , 
+            url: base-url + '/locations'
+            options: 'force new connection': false
+
+        ], !->
+          m1.should.eql m2
+          done!
+
+    # can 'b) 多个channels有同样的sessionid', !(done)->
+    #   cid1 = cid2 = null
+    #   async.parallel [
+    #     !(callback)->
+    #       client1 = io.connect base-url
+    #       client1.on 'connect', !(data)->
+    #         client1.on 'initial', !(data)->
+    #           cid1 := client1.socket.sessionid
+    #         callback!
+    #     !(callback)->
+    #       client2 = io.connect base-url + '/locations'
+    #       client2.on 'connect', !(data)->
+    #         client2.on 'ready', !(data)->
+    #           cid2 := client2.socket.sessionid
+    #           callback!
+    #     ], !->
+    #       cid1.should.eql cid2
+    #       done!
 
   #   can 'c) 不同channel可以各自使用自己的数据', !(done)->
   #     n1 = n2 = null
