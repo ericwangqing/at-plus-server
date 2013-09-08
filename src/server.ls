@@ -54,7 +54,7 @@ module.exports =
     configure-at-plus-server!
     initial-at-plus-server!
     server.http-server.listen port, ->
-      console.log "at-plus is listening on port #{port}" 
+      console.info "at-plus is listening on port #{port}" 
       done! if done 
   shutdown: !->
     console.info "****************** close server **********************" 

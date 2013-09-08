@@ -1,11 +1,10 @@
-require! ['./interesting-points-manager', './channels-initial-helper']
+require! ['./interesting-points-manager', './channel-initial-helper']
 module.exports  = 
   init: !(io)->
-    channels-initial-helper.channel-initial-wrapper {
+    channel-initial-helper.server-channel-initial-wrapper {
       channel: io.of('/locations')
 
       session-socket-handler: !(socket, data, callback)->
-        console.log "locatons channel handles session and socket, socket id: #{socket.id}, socket session: ", socket.session
         socket.number = socket.number or Math.random!
         socket.session.message = socket.session.message or Math.random!
         callback!
