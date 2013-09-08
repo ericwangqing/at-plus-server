@@ -14,8 +14,7 @@ describe '测试location channel', !->
             urls: [sysu-url, youku-url]
         },
         !(client, initial-data)->
-          initial-data.should.have.property 'locations'
-          initial-data.location.lengths.should.be 2
+          initial-data.should.have.property('locations').with.length-of 2
           initial-data.should.include.sysu-location
           initial-data.should.include.sysu-location
           done!
@@ -25,7 +24,3 @@ describe '测试location channel', !->
   describe '测试are interal locations / report internal or not', !-> # 在Spike之后，针对已有协议，考虑更多各种情况，进行BDD开发。
   describe '测试are ask resolving locations / answer resolved locations', !->
   describe '测试are interal locations/report internal or not', !->
-    can 'use debug', !(done)->
-      # debug "sysu-location: ", sysu-location
-      # sysu-location.should.have.property 'name'
-      done!
