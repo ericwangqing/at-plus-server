@@ -19,7 +19,7 @@ module.exports = (grunt)->
           expand: true # 将来改为在dev下的配置
           # flatten: true
           cwd: 'test'
-          src: ['**/*.ls', '!header.ls', '!**/*patch*', '!**/*helper*']
+          src: ['**/*.ls', '!header.ls', '!helpers/*', '!fixtures/*']
           dest: 'test-temp/'
           ext: '.ls'
         ]
@@ -43,16 +43,21 @@ module.exports = (grunt)->
           ext: '.spec.js'
         ]
       test_helper:
+        options:
+          bare: true
         files: [
           expand: true
           flatten: true
           cwd: 'test'
-          src: ['**/*patch*.ls', '**/*helper*.ls']
+          src: ['helpers/*.ls', 'fixtures/*.ls']
           dest: 'test-bin/'
           ext: '.js'
         ]
     jshint:
       files: "bin/**/*.js"
+    env:
+      test:
+        DEBUG: "at-plus"
     simplemocha:
       src: 'test-bin/**/*.spec.js'
       options:
@@ -68,7 +73,7 @@ module.exports = (grunt)->
           spawn: true
       test_compile:
         files: ["test/**/*.ls"]
-        tasks: ["concat", "livescript:test", "livescript:test_helper", "simplemocha"]
+        tasks: ["concat", "livescript:test", "livescript:test_helper", "env:test", "simplemocha"]
     nodemon:
       all:
         options: 
@@ -86,6 +91,7 @@ module.exports = (grunt)->
   grunt.loadNpmTasks "grunt-livescript"
   grunt.loadNpmTasks "grunt-simple-mocha"
   grunt.loadNpmTasks "grunt-nodemon"
+  grunt.loadNpmTasks "grunt-env"
   grunt.loadNpmTasks "grunt-concurrent"
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-watch"
@@ -94,7 +100,7 @@ module.exports = (grunt)->
   grunt.loadNpmTasks "grunt-contrib-concat"
 
   grunt.registerTask "default", ["clean", "copy", "concat", "livescript", "concurrent"]
-  grunt.registerTask "test", ["simplemocha"]
+  grunt.registerTask "test", ["env:test", "simplemocha"]
 
 
   grunt.registerTask 'delayed-simplemocha', "run mocha later for nodemon picks up changes", ->

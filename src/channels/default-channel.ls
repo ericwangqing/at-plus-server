@@ -5,7 +5,7 @@ module.exports =
     channel-initial-helper.server-channel-initial-wrapper {
       channel: io
 
-      session-socket-handler: !(socket, data, callback)->
+      request-initial-handler: !(socket, data, callback)->
 
         if data and  data.sid
           session-store.restore socket.id, data.sid, !(found-session)->
@@ -14,11 +14,13 @@ module.exports =
         else
           callback!
 
-      response-initial-data-getter: !(socket, data, callback)->
+      response-initial-handler: !(socket, data, callback)->
         callback err = null, {
         }
 
-      business-handlers: !(socket, data, callback)->
+      business-handlers-register: !(socket, data, callback)->
+        callback err = null, {
+        }
     }
 
 
