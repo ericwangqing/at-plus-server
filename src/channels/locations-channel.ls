@@ -1,4 +1,4 @@
-require! ['./interesting-points-manager', './channel-initial-helper']
+require! ['./channel-initial-helper']
 module.exports  = 
   init: !(io)->
     channel-initial-helper.server-channel-initial-wrapper {

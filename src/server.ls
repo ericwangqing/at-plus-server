@@ -1,6 +1,5 @@
 require! [express, http, path, jade, 'socket.io', 'connect', 
-  './default-channel', './locations-channel', './interesting-points-channel', './chats-channel', 
-  './users-channel', './config', './session-store']
+  './default-channel', './locations-channel', './config', './session-store']
 
 debug = require('debug')('at-plus')
 
@@ -28,9 +27,6 @@ initial-at-plus-server = !->
 
   default-channel.init io
   locations-channel.init io
-  users-channel.init io
-  interesting-points-channel.init io
-  chats-channel.init io
 
 patch-socket-with-accross-namespaces-session = !->
   Socket = require 'socket.io/lib/socket.js'

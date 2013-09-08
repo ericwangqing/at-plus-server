@@ -7,16 +7,13 @@ describe '测试@+为socket.io添加的session', !->
     can 'a) 在同一个用户多次请求之间保存状态', !(done)->
       n = null
       request-server !(client, initial-data)->
-        console.log "client handle response-initial: ", initial-data
         n := initial-data.number
 
         client.on 'request-1-answer', !(data)->
-          console.log "client handle request-1-answer: ", data
           data.number.should.eql n
           done!
 
         client.emit 'request-1', null
-        console.log 'client emit request-1'
 
     can 'b) 能够区分多个用户的请求', !(done)-> # option中 'force new connection': true
       n1 = n2 = cid1 = cid2 = null
@@ -116,13 +113,11 @@ describe '测试@+为socket.io添加的session', !->
     can 'd) 客户端的两次连接时，如果保存了sid，则可以恢复上一次的状态', !(done)->
       sid = message = null
       request-server !(client, initial-data)->
-        debug 'initial-data 1: ', initial-data
         sid := initial-data.sid
         message := initial-data.message
         client.disconnect!
 
         request-server !(client, initial-data)->
-          debug 'initial-data 2: ', initial-data
           initial-data.message.should.eql message
           done!
         ,
