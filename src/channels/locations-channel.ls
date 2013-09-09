@@ -10,7 +10,7 @@ module.exports  =
         callback!
 
       response-initial-data-getter: !(socket, data, callback)->
-        callback {
+        callback err = null, {
           message: socket.session.message
           number: socket.number 
         }
@@ -21,8 +21,9 @@ module.exports  =
 
 for-session-testing = !(socket, callback)->  # these handler are used in session-testing, and should be removed in future
   # console.log 'locations channel connected'
-  socket.on 'request-1', !(data)->
+  socket.on 'request-1', !(data, done)->
     socket.emit 'request-1-answer',
       message: socket.session.message
       number: socket.number
+    done!
   callback!

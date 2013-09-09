@@ -30,11 +30,12 @@ module.exports =
   server-channel-initial-wrapper: !(config)->
     config = get-safe-config config
     config.channel.on 'connection', !(socket)->
-      (data) <-! socket.on 'request-initial'
+      (data, done) <-! socket.on 'request-initial'
       (err, result) <-! config.session-socket-handler socket, data 
       (err, result) <-! config.business-handlers socket, data # bussniess-handler、response-initial-data-getter可能都用不上data，加上data是为了API的整洁、漂亮
       (err, result) <-! config.response-initial-data-getter socket, data
       socket.emit 'response-initial', result
+      done!
 
 
   # config:

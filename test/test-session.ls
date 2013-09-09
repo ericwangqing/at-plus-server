@@ -49,14 +49,16 @@ describe '测试@+为socket.io添加的session', !->
             options: 'force new connection': false
 
         !(callback)->
-          request-server !(client)->
-            client.on 'request-1-answer', !(data)->
-              m2 := data.message
-              callback!
-            client.emit 'request-1'
-          , 
-            url: base-url + '/locations'
-            options: 'force new connection': false
+          set-timeout -> # 这里加timeout是防止server对同一个session的竞争，造成错误。
+            request-server !(client)->
+              client.on 'request-1-answer', !(data)->
+                m2 := data.message
+                callback!
+              client.emit 'request-1', null
+            , 
+              url: base-url + '/locations'
+              options: 'force new connection': false
+          , 10
 
         ], !->
           m1.should.eql m2
@@ -92,7 +94,7 @@ describe '测试@+为socket.io添加的session', !->
             client.on 'request-1-answer', !(data)->
               n1 := data.number
               callback!
-            client.emit 'request-1'
+            client.emit 'request-1', null
           , 
             options: 'force new connection': false
 
@@ -101,7 +103,7 @@ describe '测试@+为socket.io添加的session', !->
             client.on 'request-1-answer', !(data)->
               n2 := data.number
               callback!
-            client.emit 'request-1'
+            client.emit 'request-1', null
           , 
             url: base-url + '/locations'
             options: 'force new connection': false
