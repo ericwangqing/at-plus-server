@@ -3,6 +3,7 @@ sysu-url = 'http://ss.sysu.edu.cn/InformationSystem/'
 youku-url = 'http://v.youku.com/v_show/id_XNjA1OTQ2OTI0.html'
 sysu-location = utils.load-fixture 'sysu-location'
 youku-location = utils.load-fixture 'youku-location'
+
 describe '测试location channel', !->
   describe 'BDD之Spike Story', !->
     can '能够给回小东两个兴趣点（中大、优酷）的列表', !(done)->
