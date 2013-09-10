@@ -4,7 +4,7 @@
 
 io = require 'socket.io-client'
 # patch = require './patch-io-client-with-session'
-require! {should, async, _: underscore, './utils', '../bin/channel-initial-helper'}
+require! {should, async, _: underscore, './utils', '../bin/channel-initial-wrapper'}
 debug = require('debug')('at-plus')
 
 base-url = 'http://localhost:3000'
@@ -16,7 +16,7 @@ options =
 can = it # it在LiveScript中被作为缺省的参数，因此我们先置换为can
 
 request-server = !(alter-option, business-handlers-register) ->
-  channel-initial-helper.client-channel-initial-wrapper {
+  channel-initial-wrapper.client-channel-initial-wrapper {
     io: io
     url: base-url
     options: options

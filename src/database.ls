@@ -1,36 +1,40 @@
 # mockable Singleton
-require! ['mongodb'.Server, 'mongodb'.MongoClient, './config']
+require! ['mongodb'.Db, 'mongodb'.Server, 'mongodb'.MongoClient, './config']
 
-client = connection = null
+db = null
 
 init-mongo-client = !(callback)->
-  client := new MongoClient new Server config.mongo.host, config.mongo.port
-  (err, opened-client) <-! client.open
-  connection := client.db config.mongo.db
-  console.log 'connection.collection: ', connection.collection
-  load-collections connection, config.mongo.collections
-  callback!
+  if db
+    callback!
+  else
+    # debug "create connection"
+    db := new Db config.mongo.db, (new Server config.mongo.host, config.mongo.port), w: config.mongo.write-concern
+    (err, db) <-! db.open
 
-load-collections = !(connection, collections)->
+    load-collections db, config.mongo.collections
+    callback!
+
+load-collections = !(db, collections)->
   for c in collections
-    connection[c] = connection.collection c
+    # debug "add collection: #{c} in db"
+    db.at-plus = {}
+    db.at-plus[c] = db.collection c
 
 shutdown-mongo-client = !(callback)->
-  client.close!
+  db.close!
+  db := null
   callback!
   
-__set-mock-db-connnection = !(mock-db-connnection)->
-  connection = mock-db-connnection
+__set-mock-db = !(mock-db)->
+  db = mock-db
 
 
-module.exports <<< {
-  get-db-connection: (callback)->
-    if !connection
+module.exports =
+  get-db: !(callback)->
+    if !db
       <-! init-mongo-client
-      callback connection
+      callback db
     else
-      callback connection
+      callback db
 
-    connection
   shutdown-mongo-client: shutdown-mongo-client
-}

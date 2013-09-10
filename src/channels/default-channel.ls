@@ -1,8 +1,7 @@
-debug = require('debug')('at-plus')
-require! ['./channel-initial-helper', './session-store']
+require! ['./channel-initial-wrapper', './session-store']
 module.exports = 
-  init: !(io)->
-    channel-initial-helper.server-channel-initial-wrapper {
+  init: !(io, db)->
+    channel-initial-wrapper.server-channel-initial-wrapper {
       channel: io
 
       request-initial-handler: !(socket, data, callback)->

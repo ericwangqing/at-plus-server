@@ -1,7 +1,5 @@
-require! [express, http, path, jade, 'socket.io', 'connect', 
+require! [express, http, path, jade, 'socket.io', 'connect', './database'
   './default-channel', './locations-channel', './config', './session-store']
-
-debug = require('debug')('at-plus')
 
 port = process.env.PORT or config.server.port 
  
@@ -25,8 +23,9 @@ initial-at-plus-server = !->
   io = socket.listen server.http-server
   io.set 'log level', 1
 
-  default-channel.init io
-  locations-channel.init io
+  (db-connection) <-! database.get-db
+  default-channel.init io, db-connection
+  locations-channel.init io, db-connection
 
 patch-socket-with-accross-namespaces-session = !->
   Socket = require 'socket.io/lib/socket.js'
