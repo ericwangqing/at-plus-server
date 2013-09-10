@@ -20,8 +20,6 @@ describe '测试location channel', !->
           initial-data.should.include.sysu-location
           done!
 
-
-
   describe '测试are interal locations / report internal or not', !-> # 在Spike之后，针对已有协议，考虑更多各种情况，进行BDD开发。
   describe '测试are ask resolving locations / answer resolved locations', !->
   describe '测试are interal locations/report internal or not', !->
