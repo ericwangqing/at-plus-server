@@ -7,11 +7,22 @@
 TIME_WAIT_SERVER_RESTART = 1000 # BE CAREFUL! May need more time for lower computers. !!
 module.exports = (grunt)->
   grunt.initConfig
-    clean: ["bin", 'test-temp', 'test-bin']
+    clean: ["bin", 'src-temp', 'test-temp', 'test-bin']
     copy:
       main:
         files: [{expand: true, cwd:'resource/', src: ['**'], dest: 'bin/'}]
     concat: # 将每个测试中都要用的部分抽出来
+      prefix_src:
+        options:
+          banner: "debug = require('debug')('at-plus')\n"
+        files: [
+          expand: true # 将来改为在dev下的配置
+          # flatten: true
+          cwd: 'src'
+          src: ['**/*.ls', '!header.ls']
+          dest: 'src-temp/'
+          ext: '.ls'
+        ]
       prefix_test:
         options:
           banner: require('fs').readFileSync('test/header.ls', {encoding: 'utf-8'})
@@ -28,7 +39,7 @@ module.exports = (grunt)->
         files: [
           expand: true
           flatten: true
-          cwd: 'src'
+          cwd: 'src-temp'
           src: ['**/*.ls']
           dest: 'bin/'
           ext: '.js'
@@ -68,12 +79,12 @@ module.exports = (grunt)->
     watch:
       src:
         files: ["src/**/*.ls"]
-        tasks: ["copy", "livescript:src",  "delayed-simplemocha"]
+        tasks: ["concat:prefix_test", "livescript:src",  "copy", "delayed-simplemocha"]
         options:
           spawn: true
       test_compile:
         files: ["test/**/*.ls"]
-        tasks: ["concat", "livescript:test", "livescript:test_helper", "env:test", "simplemocha"]
+        tasks: ["concat:prefix_test", "livescript:test", "livescript:test_helper", "env:test", "simplemocha"]
     nodemon:
       all:
         options: 
