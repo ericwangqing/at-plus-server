@@ -1,5 +1,5 @@
 require! [express, http, path, jade, 'socket.io', 'connect', 
-  './default-channel', './locations-channel', './config', './session-store']
+  './default-channel', './locations-channel', './config', './session-store', './database']
 
 debug = require('debug')('at-plus')
 

@@ -7,7 +7,7 @@ init-mongo-client = !(callback)->
   client := new MongoClient new Server config.mongo.host, config.mongo.port
   (err, opened-client) <-! client.open
   connection := client.db config.mongo.db
-  console.log 'connection.collection: ', connection.collection
+  # console.log 'connection.collection: ', connection.collection
   load-collections connection, config.mongo.collections
   callback!
 

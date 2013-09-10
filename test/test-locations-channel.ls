@@ -5,6 +5,14 @@ sysu-location = utils.load-fixture 'sysu-location'
 youku-location = utils.load-fixture 'youku-location'
 
 describe '测试location channel', !->
+  db-connection = null
+  do
+    (done) <-! before
+    (connection) <-! database.get-db-connection
+    db-connection := connection
+    (err, records) <-! db-connection.locations.insert [sysu-location, youku-location], safe: true
+    done! if !err
+
   describe 'BDD之Spike Story', !->
     can '能够给回小东两个兴趣点（中大、优酷）的列表', !(done)->
       request-server {
@@ -23,3 +31,8 @@ describe '测试location channel', !->
   describe '测试are interal locations / report internal or not', !-> # 在Spike之后，针对已有协议，考虑更多各种情况，进行BDD开发。
   describe '测试are ask resolving locations / answer resolved locations', !->
   describe '测试are interal locations/report internal or not', !->
+
+  do
+    (done) <-! after
+    (err) <-! db-connection.locations.remove
+    done! if !err
