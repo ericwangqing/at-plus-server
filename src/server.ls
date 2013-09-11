@@ -23,9 +23,8 @@ initial-at-plus-server = !->
   io = socket.listen server.http-server
   io.set 'log level', 1
 
-  (db-connection) <-! database.get-db
-  default-channel.init io, db-connection
-  locations-channel.init io, db-connection
+  default-channel.init io
+  locations-channel.init io
 
 patch-socket-with-accross-namespaces-session = !->
   Socket = require 'socket.io/lib/socket.js'
