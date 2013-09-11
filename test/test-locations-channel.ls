@@ -15,14 +15,6 @@ describe '测试location channel', !->
 
   describe 'BDD之Spike Story', !->
     can '能够给回小东两个页面的兴趣点（中大、优酷）的列表', !(done)->
-      Test = (@name)->
-
-      Test.prototype.__proto__ = process.EventEmitter.prototype;
-      test = new Test 'testing recieve connect event from socket.io'
-
-      test.on 'connect', !(data)->
-        debug "#{test.name}, recieving 'conenct' event successful, with data: ", data
-
       request-server {
         url: locations-channel-url
         request-initial-data:

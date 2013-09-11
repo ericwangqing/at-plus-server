@@ -31,7 +31,7 @@ patchs.patch-socket-with-accross-namespaces-session!
 module.exports =
   start: !(done)->
     if not process.env.SERVER_ALREADY_RUNNING
-      console.info "****************** start server **********************"
+      console.info "\n****************** start server **********************"
       configure-at-plus-server!
       initial-at-plus-server!
       server.http-server.listen port, ->

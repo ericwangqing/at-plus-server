@@ -8,7 +8,7 @@ module.exports =
 
     Socket.prototype.on = !(event, listener)->
       new-listener = !->
-        debug "***************** capture #{event} at #{@.id} the session is: ", @session, " ***************"
+        debug " capture #{event} at #{@.id} the session is: ", @session
         done = save-seesion = !~> # patched to each handler, need running at the end of handlers to save-session
           session-store.set @.id, @session, !(session)~>
 
@@ -22,4 +22,4 @@ module.exports =
         else
           listener.apply listener, new-arg
           
-      process.EventEmitter.prototype.on.call @, event, new-listener
+      require("events").EventEmitter.prototype.on.call @, event, new-listener
