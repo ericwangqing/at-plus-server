@@ -16,10 +16,11 @@ init-mongo-client = !(callback)->
     callback!
 
 load-collections = !(db, collections)->
+  db.at-plus = {}
   for c in collections
     # debug "add collection: #{c} in db"
-    db.at-plus = {}
-    db.at-plus[c] = db.collection c
+    let collection-name = c # 这里要用闭包来保证创建collection的正确
+      db.at-plus[collection-name] = db.collection collection-name
 
 shutdown-mongo-client = !(callback)->
   db.close!

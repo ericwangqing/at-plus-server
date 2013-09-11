@@ -9,6 +9,5 @@ resolve-locations = !(request-locations, callback)->
   (err, locations) <-! db.at-plus.locations.find!.to-array
   callback err || locations
 
-
 module.exports =
   resolve-locations: resolve-locations
