@@ -1,3 +1,4 @@
+debug = require('debug')('at-plus')
 require! ['./locations-manager', './channel-initial-wrapper']
 
 request-initial-handler = !(socket, data, callback)->

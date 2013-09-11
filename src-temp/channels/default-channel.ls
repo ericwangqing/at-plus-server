@@ -1,3 +1,4 @@
+debug = require('debug')('at-plus')
 require! ['./channel-initial-wrapper', './session-store']
 module.exports = 
   init: !(io, db)->

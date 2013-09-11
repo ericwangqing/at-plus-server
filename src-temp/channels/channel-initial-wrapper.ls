@@ -1,3 +1,4 @@
+debug = require('debug')('at-plus')
 '''
 1) 所有channels都需要在on 'conncetion'，得到socket之后，在其request-initial方法中，注册业务handlers。
 2) 所有client都需要在on 'connect', 得到socket之后，在其response-initial方法中，注册业务handler，并最后emit 'request-initial'，启动与server的交互。
@@ -34,7 +35,7 @@ module.exports =
       (err, result) <-! config.request-initial-handler socket, data 
       (err, result) <-! config.business-handlers-register socket, data # bussniess-handler、response-initial-handler可能都用不上data，加上data是为了API的整洁、漂亮
       (err, result) <-! config.response-initial-handler socket, data
-      socket.emit 'response-initial', result
+      socket.emit 'response-initial', (result or {})
       done!
 
 
@@ -42,7 +43,8 @@ module.exports =
   #   io: # socket.io提供，用于连接。mandatory
   #   url: # channel的url。mandatory
   #   business-handlers-register: # 这个时最最重要的部分，所有的业务逻辑监听都在这里进行。optional
-  #   request-initial-data-getter: # 在这里设定通过repuest-initial事件发送给server的数据. optional
+  #   request-initial-data-getter: # 在这里设定获取repuest-initial事件发送给server的数据的方法. optional
+  #   request-initial-data: # 如果repuest-initial事件发送给server的数据比较简单，可直接设置. optional
 
   client-channel-initial-wrapper: !(config)->
     client = config.io.connect config.url, config.options
@@ -52,4 +54,4 @@ module.exports =
     client.on 'response-initial', !(data)->
       (err, result) <-! (get-safe-method config.business-handlers-register) client, data 
     (err, result) <-! (get-safe-method config.resquest-initial-data-getter)
-    client.emit 'request-initial', config.request-initial-data or {}
+    client.emit 'request-initial', (result or config.request-initial-data or {})

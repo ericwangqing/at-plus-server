@@ -1,9 +1,18 @@
+debug = require('debug')('at-plus')
 # mockable Singleton
 require! ['mongodb'.Db, 'mongodb'.Server, 'mongodb'.MongoClient, './config']
 
 db = null
 
 init-mongo-client = !(callback)->
+<<<<<<< HEAD
+  client := new MongoClient new Server config.mongo.host, config.mongo.port
+  (err, opened-client) <-! client.open
+  connection := client.db config.mongo.db
+  # console.log 'connection.collection: ', connection.collection
+  load-collections connection, config.mongo.collections
+  callback!
+=======
   if db
     callback!
   else
@@ -13,6 +22,7 @@ init-mongo-client = !(callback)->
 
     load-collections db, config.mongo.collections
     callback!
+>>>>>>> upstream/master
 
 load-collections = !(db, collections)->
   for c in collections
@@ -37,4 +47,10 @@ module.exports =
     else
       callback db
 
+<<<<<<< HEAD
+    connection
   shutdown-mongo-client: shutdown-mongo-client
+}
+=======
+  shutdown-mongo-client: shutdown-mongo-client
+>>>>>>> upstream/master

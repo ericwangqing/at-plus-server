@@ -1,3 +1,4 @@
+debug = require('debug')('at-plus')
 require! './database'
 interesting-points-manager =
   get-interesting-points: !(location, callback)->

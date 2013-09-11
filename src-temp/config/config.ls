@@ -1,3 +1,4 @@
+debug = require('debug')('at-plus')
 /*
  * Created by Wang, Qing. All rights reserved.
  */

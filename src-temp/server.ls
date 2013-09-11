@@ -1,5 +1,11 @@
+debug = require('debug')('at-plus')
+<<<<<<< HEAD
+require! [express, http, path, jade, 'socket.io', 'connect', 
+  './default-channel', './locations-channel', './config', './session-store', './database']
+=======
 require! [express, http, path, jade, 'socket.io', 'connect', './database'
   './default-channel', './locations-channel', './config', './session-store']
+>>>>>>> upstream/master
 
 port = process.env.PORT or config.server.port 
  
