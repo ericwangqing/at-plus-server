@@ -1,8 +1,12 @@
 debug = require('debug')('at-plus')
-module.exports  = 
+require! ['./event-bus', './channel-initial-wrapper']
+module.exports = 
+  init: !(io)->
+    channel-initial-wrapper.server-channel-initial-wrapper {
+      channel: io.of '/users'
 
-	init: !(io)->
-		io.of('/users-channel').on 'connection', !(socket)->
-			console.log 'users-channel connected'
-			socket.emit 'a message', {everyone: 'in', '/users': 'will get'}
-
+      business-handlers-register: !(socket, data, callback)->
+        event-bus.on 'user-create-interesting-point-comment', !(data)->
+          socket.emit 'response-user-create-interesting-point-comment', data
+        callback err = null, {}
+    }

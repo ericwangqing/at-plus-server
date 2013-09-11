@@ -5,7 +5,6 @@ module.exports =
       channel: io
 
       request-initial-handler: !(socket, data, callback)->
-
         if data and  data.sid
           session-store.restore socket.id, data.sid, !(found-session)->
             socket.session = found-session
