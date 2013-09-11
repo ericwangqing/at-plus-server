@@ -1,3 +1,4 @@
+debug = require('debug')('at-plus')
 '''
 1) 所有channels都需要在on 'conncetion'，得到socket之后，在其request-initial方法中，注册业务handlers。
 2) 所有client都需要在on 'connect', 得到socket之后，在其response-initial方法中，注册业务handler，并最后emit 'request-initial'，启动与server的交互。
