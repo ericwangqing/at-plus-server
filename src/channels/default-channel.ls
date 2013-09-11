@@ -1,6 +1,6 @@
 require! ['./channel-initial-wrapper', './session-store']
 module.exports = 
-  init: !(io, db)->
+  init: !(io)->
     channel-initial-wrapper.server-channel-initial-wrapper {
       channel: io
 

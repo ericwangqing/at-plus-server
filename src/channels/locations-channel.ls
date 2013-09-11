@@ -5,7 +5,7 @@ request-initial-handler = !(socket, data, callback)->
   callback err = null, locations: resolved-locations
 
 module.exports  = 
-  init: !(io, db)->
+  init: !(io)->
     channel-initial-wrapper.server-channel-initial-wrapper {
       channel: io.of('/locations')
 
