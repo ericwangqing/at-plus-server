@@ -1,10 +1,9 @@
-# ！！注意，在开发时，请注意观察控制台的输出，关注server restart的时机，如果在simplemocha之前，一切OK。
-# 否则，在simplemocha之后，才restart server，测试的结果将不是最新更改的情况。遇到这种状况，再次保存一下src
-# 触发grunt，看看是否能够顺序正常。
-# 原因：watch和nodemon分别定时扫描文件，因此二者可能一个早发现、一个晚发现，再加上二者的扫描间隔也有不同，
-# 就会导致触发complie和server restart的时间、次序随机不同。
-# 终极策略：将下面的TIME_WAIT_SERVER_RESTART调整到足够大。
-TIME_WAIT_SERVER_RESTART = 1000 # BE CAREFUL! May need more time for lower computers. !!
+'''
+自动运行：grunt
+手动运行：
+  1）grunt server 
+  2）在新窗口 grunt test
+'''
 module.exports = (grunt)->
   grunt.initConfig
     clean: ["bin", 'src-temp', 'test-temp', 'test-bin']
@@ -67,8 +66,11 @@ module.exports = (grunt)->
     jshint:
       files: "bin/**/*.js"
     env:
-      test:
+      auto_test:
         DEBUG: "at-plus"
+      manual_test:
+        DEBUG: "at-plus"
+        SERVER_ALREADY_RUNNING: true
     simplemocha:
       src: 'test-bin/**/*.spec.js'
       options:
@@ -77,14 +79,16 @@ module.exports = (grunt)->
         slow: 100
         timeout: 3000
     watch:
-      src:
-        files: ["src/**/*.ls"]
-        tasks: ["concat:prefix_test", "livescript:src",  "copy", "delayed-simplemocha"]
+      auto:
+        files: ["src/**/*.ls", "test/**/*.ls"]
+        tasks: ["concat", "livescript",  "copy", "env:auto_test", "simplemocha"]
         options:
           spawn: true
-      test_compile:
-        files: ["test/**/*.ls"]
-        tasks: ["concat:prefix_test", "livescript:test", "livescript:test_helper", "env:test", "simplemocha"]
+      manual:
+        files: ["src/**/*.ls"]
+        tasks: ["concat:prefix_src", "livescript:src",  "copy"]
+        options:
+          spawn: true
     nodemon:
       all:
         options: 
@@ -95,7 +99,7 @@ module.exports = (grunt)->
     concurrent:
       target: 
         tasks:
-          ['nodemon', 'watch']
+          ['nodemon', 'watch:manual']
         options:
           logConcurrentOutput: true
 
@@ -103,15 +107,16 @@ module.exports = (grunt)->
   grunt.loadNpmTasks "grunt-simple-mocha"
   grunt.loadNpmTasks "grunt-nodemon"
   grunt.loadNpmTasks "grunt-env"
-  grunt.loadNpmTasks "grunt-concurrent"
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-contrib-clean"
+  grunt.loadNpmTasks "grunt-concurrent"
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-concat"
 
-  grunt.registerTask "default", ["clean", "copy", "concat", "livescript", "concurrent"]
-  grunt.registerTask "test", ["env:test", "simplemocha"]
+  grunt.registerTask "default", ["clean", "copy", "concat", "livescript", "simplemocha", "watch:auto"]
+  grunt.registerTask "server", ["clean", "copy", "concat", "livescript", "concurrent"]
+  grunt.registerTask "test", ["env:manual_test", "concat:prefix_test", "livescript:test", "livescript:test_helper", "simplemocha"]
 
 
   grunt.registerTask 'delayed-simplemocha', "run mocha later for nodemon picks up changes", ->

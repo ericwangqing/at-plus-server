@@ -1,4 +1,11 @@
 describe 'session测试', !->
+  before-each !(done)->
+    <-! server.start
+    done!
+
+  after-each !->
+    server.shutdown!
+
   can '每次处理业务逻辑后能够保存session', !(done) ->
     sid = message = null
     request-server {

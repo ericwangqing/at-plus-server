@@ -6,6 +6,7 @@ youku-location = utils.load-fixture 'youku-location'
 
 describe '测试location channel', !->
   before-each !(done)->
+    <-! server.start
     (require 'socket.io-client/lib/io.js').sockets = {} # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
     utils.open-db-and-load-fixtures 'locations', [sysu-location, youku-location], !->
       sysu-location._id = String sysu-location._id # 这里的_id需要强制转换成String
@@ -38,6 +39,7 @@ describe '测试location channel', !->
 
   after-each !(done)->
     utils.clear-and-close-db done
+    server.shutdown!
 
   describe '测试are interal locations / report internal or not', !-> # 在Spike之后，针对已有协议，考虑更多各种情况，进行BDD开发。
   describe '测试are ask resolving locations / answer resolved locations', !->

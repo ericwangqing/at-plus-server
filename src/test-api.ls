@@ -1,3 +1,6 @@
+# ！！目前这里的代码没有更新和维护。暂时保留，以防将来需要利用浏览器进行调试。
+
+
 BASE_URL = 'http://localhost:3000'
 
 client1 = io.connect BASE_URL
