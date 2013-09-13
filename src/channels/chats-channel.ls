@@ -9,7 +9,6 @@ add-users-into-a-chat-room = !(sockets, cid, uids)->
 
 fake-load-uids = !(socket, uid)->
   socket.session.uid = uid 
-  debug 'fake uid loaded, session: ', socket.session
 
 module.exports  = 
   init: !(io)->
@@ -27,8 +26,15 @@ module.exports  =
           socket.emit 'response-create-a-chat', cid: cid
 
         socket.on 'client-send-a-chat-message', !(data)->
-          <-! chats-manager.add-a-message-to-chat data.cid, data.message
-          socket.broadcast.to(data.cid).emit 'server-mediate-a-chat-message', {from: socket.session.uid, message: data.message}
+          message =
+            from: socket.session.uid
+            message: data.message
+          <-! chats-manager.add-a-message-to-chat data.cid, message
+          socket.broadcast.to(data.cid).emit 'server-mediate-a-chat-message', message
+
+        socket.on 'request-history-messages', !(data)->
+          (messages) <-! chats-manager.get-history-messages data
+          socket.emit 'response-history-messages', messages: messages
 
         callback err = null, {}
         

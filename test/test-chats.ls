@@ -1,11 +1,4 @@
-# 这里不测试建立聊天的过程，直接自动进入聊天室
-
 describe 'SPIKE Chats', !->
-  before-each !(done)->
-    <-! server.start
-    (require 'socket.io-client/lib/io.js').sockets = {} # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
-    done!
-
   describe '私聊', !->
     can '两人能够收到对方的消息，而不会收到自己的消息', !(done)->
       should-users-chat-correctly {
@@ -23,7 +16,6 @@ describe 'SPIKE Chats', !->
 
   describe '群聊', !->
     can '大家能够收到对方的消息，而不会收到自己的消息', !(done)->
-      (cid, chats) <-! set-up-a-chat ['王瑜', '柏信', '嘉华']
       should-users-chat-correctly {
         in-chat-uids: ['王瑜', '柏信', '嘉华']
         out-chat-uid: null
@@ -31,7 +23,6 @@ describe 'SPIKE Chats', !->
       }
 
     can '局外人不会收到聊天的消息', !(done)->
-      (cid, chats) <-! set-up-a-chat ['王瑜', '柏信', '嘉华']
       should-users-chat-correctly {
         in-chat-uids: ['王瑜', '柏信', '嘉华']
         out-chat-uid: '军令'
@@ -39,12 +30,46 @@ describe 'SPIKE Chats', !->
       }
 
 
-  # describe '历史消息查询', !(done)->
-  #   can '查询历史消息'
+  describe '历史消息查询', !->
+    can '查询所有历史消息，包括发给我的消息，也包括我发的消息', !(done)->
+      HISTORY_MESSAGE_AMOUNT = 5
+      (cid, chats) <-! set-up-a-chat ['王瑜', '柏信']
+      chats['王瑜'].on 'response-history-messages', !(data)->
+        data.should.have.property('messages').with.length-of (2 * HISTORY_MESSAGE_AMOUNT)
+        done!
 
+      waiter = new utils.All-done-waiter finish = !->
+        chats['王瑜'].emit 'request-history-messages',
+          type: 'all'
+          cid: cid
+
+      wait1 = waiter.get-wating-function!
+      wait2 = waiter.get-wating-function!
+
+      async.each [1 to HISTORY_MESSAGE_AMOUNT], !(i, next)->
+        chats['柏信'].emit 'client-send-a-chat-message',
+          cid: cid
+          message: "柏信 --> 王瑜：#{i}"
+        next!
+      ,
+        wait1!
+        
+      async.each [1 to HISTORY_MESSAGE_AMOUNT], !(i, next)->
+        chats['王瑜'].emit 'client-send-a-chat-message',
+          cid: cid
+          message: "王瑜 --> 柏信：#{i}"
+        next!
+      ,
+        wait2!
+
+      waiter.start!
+
+  before-each !(done)->
+    <-! server.start
+    (require 'socket.io-client/lib/io.js').sockets = {} # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
+    done!
 
   after-each !(done)->
-    debug 'io: ', (require 'socket.io-client/lib/io.js').sockets 
     utils.clear-and-close-db !->
       utils.Sockets-distroyer.get!.destroy-all!
       server.shutdown!
@@ -55,8 +80,8 @@ describe 'SPIKE Chats', !->
 chats-channel-url = base-url + '/chats'
 
 should-users-chat-correctly = !(config)->
-
     done new Error "至少要有两名用户!" if config.in-chat-uids.length < 2
+
     (cid, chats) <-! set-up-a-chat config.in-chat-uids
     should.exist cid
     for uid in config.in-chat-uids
@@ -68,7 +93,7 @@ should-users-chat-correctly = !(config)->
     if config.out-chat-uid
       (chat) <-! connect-chats-channel config.out-chat-uid
       chat.on 'server-mediate-a-chat-message', !(data)->
-        should.fail '局外人收到了消息', data
+        should.fail '局外人收到了消息'
         config.done!
 
     waiter = new utils.All-done-waiter config.done
@@ -76,7 +101,7 @@ should-users-chat-correctly = !(config)->
     for reciever in recievers
       chats[reciever].on 'server-mediate-a-chat-message', waiter.get-wating-function( 
         !(data)->
-          debug "#{reciever} get message: #{data.message}"
+          # debug "#{reciever} get message: #{data.message}"
           data.from.should.eql sender
       )
 

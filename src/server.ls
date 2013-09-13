@@ -21,7 +21,7 @@ configure-at-plus-server = !->
 initial-at-plus-server = !->
   server.http-server = http.createServer server # 需要用http server包装一下，才能正确初始化socket.io
   io = socket.listen server.http-server
-  # io.set 'log level', 1
+  io.set 'log level', 1
 
   chats-channel.init io
 

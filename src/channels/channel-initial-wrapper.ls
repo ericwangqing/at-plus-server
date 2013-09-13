@@ -54,5 +54,5 @@ module.exports =
     client.on 'response-initial', !(data)->
       (err, result) <-! (get-safe-method config.business-handlers-register) client, data 
     (err, result) <-! (get-safe-method config.resquest-initial-data-getter)
-    debug 'request-initial-data: ', config.request-initial-data
+    # debug 'request-initial-data: ', config.request-initial-data
     client.emit 'request-initial', (result or config.request-initial-data or {})

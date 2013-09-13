@@ -26,19 +26,15 @@ class All-done-waiter
   !(@done)->
 
   get-wating-function: (fn)->
-    debug "^^^^^^^^^^^^^^^ get-wating-function is called, running-functions: #{running-functions} ^^^^^^^^^^^^^^^^^"
     running-functions += 1
-    ->
-      debug "^^^^^^^^^^^^^^^ fn is called, running-functions: #{running-functions} ^^^^^^^^^^^^^^^^^"
-      fn.apply null, arguments
+    !->
+      fn.apply null, arguments if fn
       running-functions -= 1
-
 
   start: !->
     timer = set-interval check = ~>
-      debug "======== running-functions: #{running-functions} ============="
       if running-functions is 0
-        clear-interval timer if timer
+        clear-interval timer
         @done!
 
     , CHECK_INTERVAL
