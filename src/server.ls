@@ -27,7 +27,7 @@ initial-at-plus-server = !->
 
 patchs.patch-socket-with-accross-namespaces-session!
 
-module.exports =
+module.exports = 
   start: !(done)->
     if not process.env.SERVER_ALREADY_RUNNING
       console.info "\n****************** start server **********************"

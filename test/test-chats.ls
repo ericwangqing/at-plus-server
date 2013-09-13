@@ -28,13 +28,30 @@ connect-chats-channel = !(uid, callback)->
     request-initial-data: uid: uid # !!真实@+应用中，uid是用户登录之后存储在session中的，这里做了简化。
   },
   !(socket, initial-data)->
+    sockets-distroyer.get!.add-socket socket # 为了在每个测试结束，关闭服务端的socket，以便隔离各个测例。
     callback socket
 
+class sockets-distroyer # Singleton
+  instance = null
+
+  class destroyer
+    !->
+      @client-sockets = []
+    add-socket: (socket)->
+      @client-sockets.push socket
+    destroy-all: !->
+      for socket in @client-sockets
+        socket = socket.socket if socket.socket # 当socket.io 连接到有namespace的情况要用socket.socket.disconnect!
+        socket.disconnect!
+
+  @get = (socket)->
+    instance ?:= new destroyer socket
 
 
 describe 'SPIKE Chats', !->
   before-each !(done)->
-    debug 'run before-each ****************'
+    debug 'io: ', (require 'socket.io-client/lib/io.js').sockets 
+
     <-! server.start
     (require 'socket.io-client/lib/io.js').sockets = {} # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
     done!
@@ -75,9 +92,6 @@ describe 'SPIKE Chats', !->
         cid: cid
         message: '柏信-->王瑜'
 
-
-  #   can '局外人不会收到聊天的消息', !(done)->
-
   # describe '群聊', !->
   #   can '参与者都会收到他人的消息', !(done)->
   #     done!
@@ -92,10 +106,8 @@ describe 'SPIKE Chats', !->
 
 
   after-each !(done)->
-    utils.clear-and-close-db done
-    server.shutdown!
-
-  describe '测试are interal locations / report internal or not', !-> # 在Spike之后，针对已有协议，考虑更多各种情况，进行BDD开发。
-  describe '测试are ask resolving locations / answer resolved locations', !->
-  describe '测试are interal locations/report internal or not', !->
-
+    debug 'io: ', (require 'socket.io-client/lib/io.js').sockets 
+    utils.clear-and-close-db !->
+      sockets-distroyer.get!.destroy-all!
+      server.shutdown!
+      done!

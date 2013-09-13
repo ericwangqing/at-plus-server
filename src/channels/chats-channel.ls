@@ -2,12 +2,14 @@ require! ['./chats-manager', './channel-initial-wrapper']
 _ = require 'underscore'
 
 add-users-into-a-chat-room = !(sockets, cid, uids)->
-  debug "sockets: #{sockets.length}, cid: #{cid} uids: ", uids
   for socket in _.values sockets
     if socket.session.uid in uids
       socket.join cid 
       debug "--------- socket #{socket.id} with uid: #{socket.session.uid} join #{cid}"
 
+fake-load-uids = !(socket, uid)->
+  socket.session.uid = uid 
+  debug 'fake uid loaded, session: ', socket.session
 
 module.exports  = 
   init: !(io)->
@@ -15,18 +17,8 @@ module.exports  =
       channel: io.of('/chats')
 
       request-initial-handler: !(socket, data, callback)->
-
-
-        socket.session.uid = data.uid #!!! 注意，SPIKE_chats用这句来简化用户身份的设置和获取，在SPIKE_chats之外其它任何地方，都要将这句删除掉！！
-        debug 'session is set: ', socket.session
-
-        if data and  data.sid
-          session-store.restore socket.id, data.sid, !(found-session)->
-            socket.session = found-session
-            callback!
-        else
-          callback!
-
+        fake-load-uids socket, data.uid #!!! 注意，SPIKE_chats用这句来简化用户身份的设置和获取，在SPIKE_chats之外其它任何地方，都要将这句删除掉！！
+        callback!
 
       business-handlers-register: !(socket, data, callback)->
         socket.on 'request-create-a-chat', !(data)->
