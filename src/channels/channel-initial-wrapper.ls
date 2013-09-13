@@ -20,6 +20,7 @@ safe-method = !->
     arguments[arguments.length - 1] null, null
   
 module.exports = 
+  get-safe-method: get-safe-method
 
   # config:
   #   channel: # socket.io的namesapce对象，常常通过io.of('channel-name')获得。mandatory
@@ -53,4 +54,5 @@ module.exports =
     client.on 'response-initial', !(data)->
       (err, result) <-! (get-safe-method config.business-handlers-register) client, data 
     (err, result) <-! (get-safe-method config.resquest-initial-data-getter)
+    debug 'request-initial-data: ', config.request-initial-data
     client.emit 'request-initial', (result or config.request-initial-data or {})
