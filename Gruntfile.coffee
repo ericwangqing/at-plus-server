@@ -77,7 +77,7 @@ module.exports = (grunt)->
         # require: 'should' # use should in tests without requiring in each
         reporter: 'spec'
         slow: 100
-        timeout: 500
+        timeout: 3000
     watch:
       auto:
         files: ["src/**/*.ls", "test/**/*.ls"]
