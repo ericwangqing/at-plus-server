@@ -5,7 +5,7 @@ require! ['../test-bin/utils', './database']
 
 resolve-locations = !(request-locations, callback)->
   (db) <-! database.get-db
-  (err, locations) <-! db.at-plus.locations.find {} .to-array
+  (err, locations) <-! db.at-plus.locations.find {ulrs: $in: request-locations} .to-array
   debug 'locations: ', locations
   callback err || locations
 
