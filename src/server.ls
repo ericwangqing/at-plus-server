@@ -41,5 +41,5 @@ module.exports =
       done! if done
   shutdown: !->
     if not process.env.SERVER_ALREADY_RUNNING
-      console.info "****************** close server **********************" 
+      console.info "****************** close server **********************\n\n" 
       server.http-server.close!
