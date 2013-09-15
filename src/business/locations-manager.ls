@@ -14,9 +14,15 @@ find-inexistence-locations = (all-urls, locations)->
   , memo = []
   [url for url in all-urls when url not in exist-urls]
 
+update-location = !(lid, update-data, callback)->
+  debug '********* update-location 尚未实现 **************'
+  callback!
+
+
 create-location = !(url)->
   # !! 未实现。提醒注意，要查询url的别名，也就是多个其它url，其实指向了同一个网页。特别是此时其它@+已经打开了这样的别名网页，如果
   # 没有判断好，那些用户将收不到此页面上的兴趣点。
 
 module.exports =
   resolve-locations: resolve-locations
+  update-location: update-location
