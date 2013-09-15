@@ -15,30 +15,24 @@ class Sockets-distroyer # Singleton
       for socket in @client-sockets
         socket = socket.socket if socket.socket # 当socket.io 连接到有namespace的情况要用socket.socket.disconnect!
         socket.disconnect!
+        @client-sockets = []
 
   @get = (socket)->
     instance ?:= new Destroyer socket
 
 class All-done-waiter
-  CHECK_INTERVAL = 50
-  running-functions = 0
-
   !(@done)->
+    @running-functions = 0
 
-  get-wating-function: (fn)->
-    running-functions += 1
-    !->
+  add-wating-function: (fn)->
+    @running-functions += 1
+    !~>
       fn.apply null, arguments if fn
-      running-functions -= 1
+      @running-functions -= 1
+      @check!
 
-  start: !->
-    timer = set-interval check = ~>
-      if running-functions is 0
-        clear-interval timer
-        @done!
-
-    , CHECK_INTERVAL
-
+  check: !~>
+    @done! if @running-functions is 0
 
 module.exports =
   load-fixture: (data-name)->
