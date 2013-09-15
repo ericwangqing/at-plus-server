@@ -1,4 +1,4 @@
-require! [express, http, path, jade, 'socket.io', 'connect', './database', './patchs'
+require! [express, http, path, 'socket.io', 'connect', './database', './patchs'
   './chats-channel', './config', './session-store']
 
 port = process.env.PORT or config.server.port 

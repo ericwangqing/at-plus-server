@@ -5,6 +5,7 @@
   2）在新窗口 grunt test
 '''
 module.exports = (grunt)->
+  process.env.DEBUG = 'at-plus'
   grunt.initConfig
     clean: ["bin", 'src-temp', 'test-temp', 'test-bin']
     copy:
@@ -66,10 +67,7 @@ module.exports = (grunt)->
     jshint:
       files: "bin/**/*.js"
     env:
-      auto_test:
-        DEBUG: "at-plus"
       manual_test:
-        DEBUG: "at-plus"
         SERVER_ALREADY_RUNNING: true
     simplemocha:
       src: 'test-bin/**/*.spec.js'
@@ -81,7 +79,7 @@ module.exports = (grunt)->
     watch:
       auto:
         files: ["src/**/*.ls", "test/**/*.ls"]
-        tasks: ["concat", "livescript",  "copy", "env:auto_test", "simplemocha"]
+        tasks: ["concat", "livescript",  "copy", "simplemocha"]
         options:
           spawn: true
       manual:
@@ -94,8 +92,6 @@ module.exports = (grunt)->
         options: 
           file: 'bin/app.js'
           watchedFolders: ['bin']
-          env:
-            DEBUG: 'at-plus'
     concurrent:
       target: 
         tasks:
@@ -132,4 +128,3 @@ module.exports = (grunt)->
     console.log 'filepath: ', filepath
     grunt.config ['livescript', 'src'], filepath
     grunt.config ['livescript', 'test'], filepath
-
