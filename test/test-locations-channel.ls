@@ -7,15 +7,17 @@ describe '测试location channel', !->
           initial-data.should.have.property('locations').with.length-of 2
           initial-data.locations.should.include-eql sysu-location # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
           initial-data.locations.should.include-eql youku-location
-
-          # initial-data.locations.should.have.property sysu-url, sysu-location 
-          # initial-data.locations.should.have.property youku-url, youku-location
           done!
       }
 
-    can '查询一个已有兴趣点，一个@+中还没有的兴趣点时，给回已有兴趣点，未有为null', !(done)->
-      debug '********** 未实现 ************'
-      done!
+    can '查询一个已有location，一个@+中还没有的location时，只给回一个已有兴趣点', !(done)->
+      initial-request-to-server {
+        request-locatoin-urls: [sysu-url]
+        response-handler: !(socket, initial-data)->
+          initial-data.should.have.property('locations').with.length-of 1
+          initial-data.locations.should.include-eql sysu-location # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
+          done!
+      }
 
 
 
@@ -41,18 +43,18 @@ describe '测试location channel', !->
 
 # ---------------------- 美丽的分割线，以下辅助代码 ----------------------- #
 
-locations-channel-url = base-url + '/locations'
-sysu-url = 'http://ss.sysu.edu.cn/InformationSystem/'
-youku-url = 'http://v.youku.com/v_show/id_XNjA1OTQ2OTI0.html'
-sysu-location = utils.load-fixture 'sysu-location'
-youku-location = utils.load-fixture 'youku-location'
+locations-channel-url = base-url + "/locations"
+sysu-url = "http://ss.sysu.edu.cn/InformationSystem/"
+youku-url = "http://v.youku.com/v_show/id_XNjA1OTQ2OTI0.html"
+sysu-location = utils.load-fixture "sysu-location"
+youku-location = utils.load-fixture "youku-location"
 
 initial-request-to-server = !(config)->
   request-server {
     url: locations-channel-url
     request-initial-data:
       locations:
-        type: 'web'
+        type: "web"
         urls: config.request-locatoin-urls
     },
     !(socket, initial-data)->

@@ -14,3 +14,5 @@ module.exports <<<
   session-store:
     # type: 'redis' # in-memory | redis 
     type: 'in-momery' # in-memory | redis
+  locations-channel:
+    inexistence-prefix: '_|_|_INEXISTENCE'
