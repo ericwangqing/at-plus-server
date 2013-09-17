@@ -15,7 +15,6 @@ interesting-point =
     name: '@+主页' #!!duplicated from location
     at-poisition: # position的所有信息都内嵌在这里，没有单独的position document
       is-exist: true # default
-      owners: ['uid-1', 'cid-1'] # only available when is-private is true 
       position-within-web-page:
         related-text-content: '人们可以在任何网页上自由评论，吐槽' # 兴趣点圈划包括的网页上的文字。
         related-image: 'http://some.com/images/1.jpg'# 兴趣点圈划包括的网页上的图片，这里存储图片的URL。
@@ -36,9 +35,9 @@ interesting-point =
   watched-by: ['uid-4', 'uid-5'] # is-private false才可以订阅。
   pictures:
     * type: 'snapshoot' # snapshoot | photo
-      url: 'uid/2' # uid为creator的id，资源为：http://at-plus-server/pictures/uid/2
+      url: '/user-pictures/uid-1/1' # uid为creator的id，资源为：http://at-plus-server/pictures/uid/2
     * type: 'photo' # 注意！这里是示例。实际上photo类和snapshot类是互斥的。
-      url: 'uid/4'
+      url: '/user-pictures/uid-1/1'
       highlights:
         * offset: {x: '123', y: '123'}
           size: {width: '123' height: '123'}

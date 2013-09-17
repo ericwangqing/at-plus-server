@@ -3,9 +3,8 @@ describe '测试location channel', !->
     can 'inital后，查回两个已有locations的兴趣点列表', !(done)->
       open-at-plus-on-locations [sysu-url, youku-url], !(socket, data)->
           data.should.have.property('locations').with.length-of 2
-          data.locations.should.include-eql response-sysu-location # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
+          data.locations[0].interesting-points-summaries.should.eql response-sysu-location.interesting-points-summaries # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
           data.locations.should.include-eql response-youku-location
-          # should-location-has-interesting-point-summaries (get-location data.locations, response-sysu-location), response-sysu-location.ip-summaries
           done!
 
     can 'initial with一个已有，一个@+中还没有的location时，只给回一个已有兴趣点', !(done)->
@@ -50,8 +49,7 @@ describe '测试location channel', !->
   before-each !(done)->
     <-! server.start
     (require 'socket.io-client/lib/io.js').sockets = {} # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
-    locations = utils.load-fixture "locations-in-db"
-    utils.open-clean-db-and-load-fixtures {'locations': locations}, done
+    utils.prepare-clean-test-db done
 
   after-each !(done)->
     utils.close-db !->
@@ -64,8 +62,8 @@ describe '测试location channel', !->
 locations-channel-url = base-url + "/locations"
 sysu-url = "http://ss.sysu.edu.cn/InformationSystem/"
 youku-url = "http://v.youku.com/v_show/id_XNjA1OTQ2OTI0.html"
-response-sysu-location = utils.load-fixture "response-sysu-location"
-response-youku-location = utils.load-fixture "response-youku-location"
+response-sysu-location = utils.get-test-initial-locations-response 'lid-1'
+response-youku-location = utils.get-test-initial-locations-response 'lid-2'
 
 open-at-plus-on-locations = !(urls, callback)->
   request-server {

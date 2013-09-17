@@ -1,13 +1,14 @@
-require! ['./locations-manager', './channel-initial-wrapper', './config']
+require! ['./locations-manager', './interesting-points-manager', './channel-initial-wrapper', './config']
 # _ = require 'underscore'
 business = require './event-bus'
 
 
 request-initial-handler = !(socket, data, callback)->
   (resolved-locations, inexistence-locations-urls) <-! locations-manager.resolve-locations data.locations
+  (interesting-points-summaries) <-! interesting-points-manager.get-interesting-points-summaries [location._id for location in resolved-locations]
   join-locations-rooms socket, resolved-locations
   join-inexsitence-locations-rooms socket, inexistence-locations-urls # 一旦对应url有兴趣点创建（形成location），就能够收到消息
-  callback err = null, get-response-initial-data resolved-locations
+  callback err = null, get-response-initial-data resolved-locations, interesting-points-summaries
 
 join-locations-rooms = !(socket, locations)->
   for location in locations
@@ -23,11 +24,9 @@ get-room = (inexistence-location-url)->
   # add prefix to url for distinguishing from location id
   config.locations-channel.inexistence-prefix + inexistence-location-url
 
-get-response-initial-data = (locations)->
+get-response-initial-data = (locations, interesting-points-summaries)->
   locations.for-each !(location)->
-    delete location.duration
-    delete location.retrieved-html
-    location.interesting-points = []
+    location.interesting-points-summaries = interesting-points-summaries[location._id]
 
   locations: locations
 

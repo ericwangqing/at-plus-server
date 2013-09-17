@@ -1,4 +1,4 @@
-require! [async, '../bin/database']
+require! [async, '../bin/database', '../bin/interesting-points-manager', '../bin/locations-manager']
 debug = require('debug')('at-plus')
 _ = require 'underscore'
 
@@ -41,6 +41,7 @@ class All-done-waiter
 load-fixture = (data-name)->
   eval require('fs').readFileSync(FIXTURE_PATH + data-name + '.js', {encoding: 'utf-8'}) 
 
+
 open-clean-db-and-load-fixtures = !(config, done)->
   (db) <-! database.get-db
   <-! db.drop-database
@@ -50,6 +51,14 @@ open-clean-db-and-load-fixtures = !(config, done)->
     next!
   ,
   done!
+
+prepare-clean-test-db = !(done)->
+  locations = load-fixture "locations-in-db"
+  interesting-points = load-fixture "interesting-points-in-db"
+  open-clean-db-and-load-fixtures {
+    'locations': locations
+    'interesting-points': interesting-points
+  }, done
 
 close-db = !(done)->
   (db) <-! database.get-db
@@ -66,6 +75,12 @@ chop-off-id = (obj)-> # 从服务端得回的数据，常常包括了由mongoDB�
         chop-off-id obj[key]
   obj
 
+get-test-initial-locations-response = (location-id)->
+  locations = locations-manager.clean-locations-for-response load-fixture "locations-in-db"
+  interesting-points = interesting-points-manager.clean-ips-for-response load-fixture "interesting-points-in-db"
+  response = (locations.filter (location)-> location._id is location-id)[0]
+  response.interesting-points-summaries = interesting-points[location-id]
+  response 
 
 
 module.exports =
@@ -73,5 +88,7 @@ module.exports =
   Sockets-distroyer: Sockets-distroyer
   load-fixture: load-fixture
   open-clean-db-and-load-fixtures: open-clean-db-and-load-fixtures
+  prepare-clean-test-db: prepare-clean-test-db
   close-db: close-db
   chop-off-id: chop-off-id
+  get-test-initial-locations-response: get-test-initial-locations-response
