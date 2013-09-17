@@ -15,7 +15,7 @@ class Sockets-distroyer # Singleton
       for socket in @client-sockets
         socket = socket.socket if socket.socket # 当socket.io 连接到有namespace的情况要用socket.socket.disconnect!
         socket.disconnect!
-        @client-sockets = []
+      @client-sockets = []
 
   @get = (socket)->
     instance ?:= new Destroyer socket

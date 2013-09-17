@@ -2,45 +2,290 @@
 <diagram program="umlet" version="12.0">
   <zoom_level>10</zoom_level>
   <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>390</x>
-      <y>140</y>
-      <w>188</w>
-      <h>110</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;
-create new location</panel_attributes>
-    <additional_attributes>80;90;100;90;100;30;80;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>120</x>
-      <y>170</y>
-      <w>350</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>lt=&gt;
-report internal or not</panel_attributes>
-    <additional_attributes>30;50;330;50</additional_attributes>
-  </element>
-  <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>450</x>
-      <y>120</y>
+      <x>340</x>
+      <y>170</y>
       <w>20</w>
-      <h>280</h>
+      <h>320</h>
     </coordinates>
     <panel_attributes>bg=red</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <type>com.umlet.element.Class</type>
+    <type>com.umlet.element.custom.Text</type>
+    <coordinates>
+      <x>570</x>
+      <y>70</y>
+      <w>80</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>: 方法调用</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
       <x>90</x>
+      <y>170</y>
+      <w>20</w>
+      <h>320</h>
+    </coordinates>
+    <panel_attributes>bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>700</x>
+      <y>110</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;60</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>240</y>
+      <w>198</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+join locations rooms</panel_attributes>
+    <additional_attributes>80;60;100;60;100;30;80;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>330</x>
+      <y>370</y>
+      <w>410</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+ips-summaries</panel_attributes>
+    <additional_attributes>390;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>500</x>
       <y>60</y>
+      <w>90</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=-&lt;</panel_attributes>
+    <additional_attributes>30;30;70;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>570</x>
+      <y>170</y>
+      <w>20</w>
+      <h>320</h>
+    </coordinates>
+    <panel_attributes>bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>280</x>
+      <y>110</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_:LocationsChannel_
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.Text</type>
+    <coordinates>
+      <x>300</x>
+      <y>40</y>
+      <w>260</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>*Client Initial the Locations Channel*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>660</x>
+      <y>110</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_:IPsManager_
+bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>640</x>
+      <y>50</y>
+      <w>90</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;</panel_attributes>
+    <additional_attributes>30;30;70;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>320</x>
+      <y>110</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;60</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>720</x>
+      <y>170</y>
+      <w>20</w>
+      <h>320</h>
+    </coordinates>
+    <panel_attributes>bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.Text</type>
+    <coordinates>
+      <x>710</x>
+      <y>70</y>
+      <w>80</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>: 事件发送</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>500</x>
+      <y>50</y>
+      <w>90</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>30;30;70;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>330</x>
+      <y>180</y>
+      <w>260</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+locations, 
+inexistence-location-urls</panel_attributes>
+    <additional_attributes>240;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>80</x>
+      <y>130</y>
+      <w>280</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+request initial
+urls</panel_attributes>
+    <additional_attributes>30;50;260;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>550</x>
+      <y>110</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30;30;30;60</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>280</y>
+      <w>186</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+join i-l-urls rooms</panel_attributes>
+    <additional_attributes>80;60;100;60;100;30;80;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>330</x>
+      <y>140</y>
+      <w>260</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+resolve-locations
+urls</panel_attributes>
+    <additional_attributes>240;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>510</x>
+      <y>110</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>_:LocationsManager_
+bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>80</x>
+      <y>390</y>
+      <w>280</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+response initial
+locations with ips-summaries</panel_attributes>
+    <additional_attributes>260;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>330</x>
+      <y>330</y>
+      <w>410</w>
+      <h>94</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+get-ips-summaries-of-locations
+lids</panel_attributes>
+    <additional_attributes>390;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>50</x>
+      <y>110</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -49,121 +294,30 @@ bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
+    <type>com.umlet.element.Note</type>
+    <coordinates>
+      <x>90</x>
+      <y>520</y>
+      <w>720</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>1) Client初始化时，不SUB兴趣点，只需拿回location兴趣点的summary，供显示使用。
+用户点击进入时，再SUB该兴趣点。
+·
+2）update locaiton和兴趣点关系的工作，也就是判断location内容是否变化，兴趣点是否要改变依附的location，
+在单独的应用中进行。
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>110</x>
-      <y>60</y>
+      <x>70</x>
+      <y>110</y>
       <w>50</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>30;30;30;60</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>120</x>
-      <y>130</y>
-      <w>350</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>lt=&gt;
-are internal locations</panel_attributes>
-    <additional_attributes>330;50;30;50</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>120</x>
-      <y>330</y>
-      <w>350</w>
-      <h>94</h>
-    </coordinates>
-    <panel_attributes>lt=&gt;
-response initial
-locations with interesting-points</panel_attributes>
-    <additional_attributes>330;50;30;50</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>320</x>
-      <y>240</y>
-      <w>330</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;
-find interesting-points for each location</panel_attributes>
-    <additional_attributes>150;70;170;70;170;30;150;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>430</x>
-      <y>60</y>
-      <w>50</w>
-      <h>80</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>30;30;30;60</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.SeqObjectActive</type>
-    <coordinates>
-      <x>130</x>
-      <y>120</y>
-      <w>20</w>
-      <h>280</h>
-    </coordinates>
-    <panel_attributes>bg=orange</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>120</x>
-      <y>80</y>
-      <w>350</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>lt=&gt;
-request initial</panel_attributes>
-    <additional_attributes>30;50;330;50</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>410</x>
-      <y>60</y>
-      <w>100</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>_:Server_
-bg=red</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.InteractionFrame</type>
-    <coordinates>
-      <x>10</x>
-      <y>160</y>
-      <w>510</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>optional
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>380</x>
-      <y>290</y>
-      <w>202</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;
-sub. on each location</panel_attributes>
-    <additional_attributes>90;70;110;70;110;30;90;30</additional_attributes>
   </element>
 </diagram>
