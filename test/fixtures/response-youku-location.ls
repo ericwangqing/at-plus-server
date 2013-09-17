@@ -1,5 +1,5 @@
-youku-location = 
-  # _id: "002" # 今后将由@+（mongoDB）自动生成
+response-youku-location = 
+  _id: "lid-2" # 今后将由@+（mongoDB）自动生成
   type: "web"
   name: "【全场集锦】-于大宝郑龙2球张稀哲传射 国足6-1践行誓言—在线播放—优酷网，视频高清在线观看"
   is-existing: true

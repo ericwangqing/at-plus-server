@@ -1,5 +1,5 @@
-sysu-location = 
-  # _id: "001" # 今后将由@+（mongoDB）自动生成
+response-sysu-location = 
+  _id: "lid-1" # 今后将由@+（mongoDB）自动生成
   type: "web"
   name: "中山大学软件学院"
   is-existing: true

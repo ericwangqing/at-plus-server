@@ -1,4 +1,5 @@
 require! ['./locations-manager', './channel-initial-wrapper', './config']
+# _ = require 'underscore'
 business = require './event-bus'
 
 
@@ -6,7 +7,7 @@ request-initial-handler = !(socket, data, callback)->
   (resolved-locations, inexistence-locations-urls) <-! locations-manager.resolve-locations data.locations
   join-locations-rooms socket, resolved-locations
   join-inexsitence-locations-rooms socket, inexistence-locations-urls # 一旦对应url有兴趣点创建（形成location），就能够收到消息
-  callback err = null, locations: resolved-locations
+  callback err = null, get-response-initial-data resolved-locations
 
 join-locations-rooms = !(socket, locations)->
   for location in locations
@@ -21,6 +22,14 @@ join-inexsitence-locations-rooms =!(socket, inexistence-locations-urls)->
 get-room = (inexistence-location-url)->
   # add prefix to url for distinguishing from location id
   config.locations-channel.inexistence-prefix + inexistence-location-url
+
+get-response-initial-data = (locations)->
+  locations.for-each !(location)->
+    delete location.duration
+    delete location.retrieved-html
+    location.interesting-points = []
+
+  locations: locations
 
 module.exports  = 
   init: !(io)->

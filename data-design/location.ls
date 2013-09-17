@@ -3,6 +3,7 @@ location =
   type: 'real' # real | web
   name: '中山大学体育馆'
   is-existing: true # default
+  is-internal: false # default 为true时，指不能够从公网访问的网页，或者公众无法进入的现实区域
   duration: 
     from: '2014-02-04 12:00:04'
     to: '2014-02-04 12:00:04' # 第一次报告这个location时from与to相同，之后，to是最后一次报告的时间
