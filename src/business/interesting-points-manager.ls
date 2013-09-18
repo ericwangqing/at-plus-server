@@ -15,6 +15,21 @@ clean-ips-for-response = (ips)->
   result
 
 
+visit-uids-of-interesting-points-summaries = !(interesting-points-summaries, visitor)->
+  attributes-with-uid = ['createdBy', 'commentedBy', 'sharedWith', 'watchedBy']
+  for ips-array in _.values interesting-points-summaries
+    for ips in ips-array
+      for attr in attributes-with-uid
+        value = ips[attr]
+        if _.is-array value
+          for uid, i in value
+            visitor value, i
+          ips[attr] = _.compact value # 去除null和undefined 
+        else
+          visitor ips, attr
+
+
+
 summarize = (ip)->
   if ip.type is 'web'
     ip.position-within-web-page = ip.within-location.at-position.position-within-web-page
@@ -27,4 +42,5 @@ summarize = (ip)->
 
 module.exports =
   get-interesting-points-summaries: get-interesting-points-summaries
+  visit-uids-of-interesting-points-summaries: visit-uids-of-interesting-points-summaries
   clean-ips-for-response: clean-ips-for-response # !!暴露出来，仅仅是为了测试

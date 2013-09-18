@@ -92,10 +92,10 @@ interesting-points =
           pin-point-dom: '.content div span 0' # $('.content div span')[0]，定位的原点
           offset: {x: '10em', y: '15em'}
           size: {width: '20em', height: '20em'}
-    created-by: 'uid-1'
+    created-by: 'uid-2'
     is-private: false # default 当true时，只有shared-with的人才能够看到
-    commented-by: ['uid-2', 'gid-3', 'uid-4', 'uid-8'] # 参与评论的人。 !! derived from message and interesting-point
-    shared-with: ['uid-2', 'gid-3'] # @过的人，分享给的人。
+    commented-by: ['uid-3', 'gid-3', 'uid-4', 'uid-8'] # 参与评论的人。 !! derived from message and interesting-point
+    shared-with: ['uid-3', 'gid-3'] # @过的人，分享给的人。
     watched-by: ['uid-4', 'uid-5'] # is-private false才可以订阅。
     pictures: # 兴趣点的快照
       * type: 'snapshoot' # snapshoot | photo

@@ -26,7 +26,7 @@ locations =
     retrieved-html: '<html> ... </html>'
     web-page-snapshot: '/web-page-snapshot/lid-2' # 网页的快照，用于定位兴趣点（现在未必有用，但是将来会有用）
 
-  OTHER_ONE_NOT_FOUND_IN_TEST =# interesting-points =
+  OTHER_ONE_NOT_FOUND_IN_TEST =
     _id: "lid-x" # 今后将由@+（mongoDB）自动生成
     type: "web"
     name: "xxx"
