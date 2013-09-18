@@ -6,7 +6,7 @@ resolve-locations = !(request-locations, callback)->
   (db) <-! database.get-db
   (err, locations) <-! db.at-plus.locations.find {urls: "$in": request-locations.urls} .to-array
   inexistence-locations-urls = find-inexistence-locations request-locations.urls, locations
-  callback (clean-locations-for-response locations), inexistence-locations-urls
+  callback (create-locations-for-response locations), inexistence-locations-urls
 
 find-inexistence-locations = (all-urls, locations)->
   exist-urls = _.reduce locations, (memo, location)-> 
@@ -18,7 +18,7 @@ update-location = !(lid, update-data, callback)->
   debug '********* update-location 尚未实现 **************'
   callback!
 
-clean-locations-for-response = (locations)->
+create-locations-for-response = (locations)->
   locations.for-each !(location)->
     delete location.duration
     delete location.retrieved-html
@@ -32,4 +32,4 @@ create-location = !(url, callback)->
 module.exports =
   resolve-locations: resolve-locations
   update-location: update-location
-  clean-locations-for-response: clean-locations-for-response # !!暴露出来，仅仅是为了测试
+  create-locations-for-response: create-locations-for-response # !!暴露出来，仅仅是为了测试

@@ -6,18 +6,27 @@ business = require './event-bus'
 
 
 request-initial-handler = !(socket, data, callback)->
-  socket.session.uid = data.uid if data.uid # ！！！注意，这里仅仅为了测试，在正式代码里要去掉
-  (resolved-locations, inexistence-locations-urls) <-! locations-manager.resolve-locations data.locations
-  (interesting-points-summaries) <-! interesting-points-manager.get-interesting-points-summaries [location._id for location in resolved-locations]
-  uids = _.uniq get-users-attending-interesting-points interesting-points-summaries
-  (brief-users-map) <-! users-manager.get-brief-users-map uids, socket.session.uid
-  join-locations-rooms socket, resolved-locations
+  fake-set-uid socket, data # ！！！注意，这里仅仅为了测试，在正式代码里要去掉
+  (locations-data, inexistence-locations-urls) <-! prepare-location-data-for-initializing-client data.locations, socket.session.uid
+  join-locations-rooms socket, locations-data.locations
   join-inexsitence-locations-rooms socket, inexistence-locations-urls # 一旦对应url有兴趣点创建（形成location），就能够收到消息
-  callback get-response-initial-data resolved-locations, interesting-points-summaries, brief-users-map
+  callback locations-data
 
-get-users-attending-interesting-points = (interesting-points-summaries)->
+prepare-location-data-for-initializing-client = !(locations, current-uid, callback)->
+  (resolved-locations, inexistence-locations-urls) <-! locations-manager.resolve-locations locations
+  (interesting-points-summaries-map) <-! interesting-points-manager.get-interesting-points-summaries-map [location._id for location in resolved-locations]
+  uids = _.uniq get-users-attending-interesting-points interesting-points-summaries-map
+  (brief-users-map) <-! users-manager.get-brief-users-map uids, current-uid
+  locations-data = get-response-initial-data resolved-locations, interesting-points-summaries-map, brief-users-map
+  callback locations-data, inexistence-locations-urls
+
+fake-set-uid = !(socket, data)->
+  socket.session.uid = data.uid if data.uid
+
+
+get-users-attending-interesting-points = (interesting-points-summaries-map)->
   uids = []
-  interesting-points-manager.visit-uids-of-interesting-points-summaries interesting-points-summaries, (value, attr)->
+  interesting-points-manager.visit-uids-of-interesting-points-summaries-map interesting-points-summaries-map, (value, attr)->
     uids.push value[attr]
   uids
 
@@ -36,28 +45,16 @@ get-room = (inexistence-location-url)->
   config.locations-channel.inexistence-prefix + inexistence-location-url
 
 get-response-initial-data = (locations, interesting-points-summaries, brief-users-map)->
-  replace-uids-with-brief-users-map interesting-points-summaries, brief-users-map
+  replace-uids-with-brief-users interesting-points-summaries, brief-users-map
   locations.for-each !(location)->
     location.interesting-points-summaries = interesting-points-summaries[location._id] 
     # location.interesting-points-summaries[0].commented-by = _.compact location.interesting-points-summaries[0].commented-by
   locations: locations
 
-
-replace-uids-with-brief-users-map = !(interesting-points-summaries, brief-users-map)->
-  interesting-points-manager.visit-uids-of-interesting-points-summaries interesting-points-summaries, (value, attr)->
+replace-uids-with-brief-users = !(interesting-points-summaries, brief-users-map)->
+  interesting-points-manager.visit-uids-of-interesting-points-summaries-map interesting-points-summaries, (value, attr)->
     value[attr] = brief-users-map[value[attr]]
 
-
-  # for ips-array in _.values interesting-points-summaries
-  #   for ips in ips-array
-  #     replace-uid-in-attribute ips, ['createdBy', 'commentedBy', 'sharedWith', 'watchedBy'], brief-users-map
-
-  # replace-uid-in-attribute = !(ips, attributes, brief-users-map)->
-  #   for attr in attributes
-  #     if value = ips[attr]
-  #       if _.is-array value
-  #         for uid, i in value
-  #           value[i] = brief-users-map[uid]
 
 module.exports  = 
   init: !(io)->

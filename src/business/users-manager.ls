@@ -5,9 +5,9 @@ get-brief-users-map = !(uids, current-uid, callback)->
   (db) <-! database.get-db
   uids.push current-uid
   (err, users) <-! db.at-plus.users.find {_id: "$in": uids} .to-array
-  callback clean-users-for-response users, current-uid
+  callback create-brief-users-map users, current-uid
 
-clean-users-for-response = (users, current-uid)->
+create-brief-users-map = (users, current-uid)->
   current-user = get-user-by-id users, current-uid
   brief-users-map = {}
   for user in users
@@ -30,4 +30,4 @@ get-user-by-id = !(users, id)->
 
 module.exports =
   get-brief-users-map: get-brief-users-map
-  clean-users-for-response: clean-users-for-response # !!暴露出来，仅仅是为了测试
+  create-brief-users-map: create-brief-users-map # !!暴露出来，仅仅是为了测试

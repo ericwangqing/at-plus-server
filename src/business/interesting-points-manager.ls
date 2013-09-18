@@ -1,13 +1,13 @@
 require! './database'
 _ = require 'underscore'
 
-get-interesting-points-summaries = !(locations-ids, callback)->
+get-interesting-points-summaries-map = !(locations-ids, callback)->
   (db) <-! database.get-db
   (err, ips) <-! db.at-plus['interesting-points'].find {'withinLocation.lid': "$in": locations-ids} .to-array
-  # debug 'get-interesting-points-summaries: ', ips.length
-  callback clean-ips-for-response ips
+  # debug 'get-interesting-points-summaries-map: ', ips.length
+  callback create-interesting-points-summaries-map ips
 
-clean-ips-for-response = (ips)->
+create-interesting-points-summaries-map = (ips)->
   result = {}
   for ip in ips
     result[ip.within-location.lid] ||= [] 
@@ -15,7 +15,7 @@ clean-ips-for-response = (ips)->
   result
 
 
-visit-uids-of-interesting-points-summaries = !(interesting-points-summaries, visitor)->
+visit-uids-of-interesting-points-summaries-map = !(interesting-points-summaries, visitor)->
   attributes-with-uid = ['createdBy', 'commentedBy', 'sharedWith', 'watchedBy']
   for ips-array in _.values interesting-points-summaries
     for ips in ips-array
@@ -28,8 +28,6 @@ visit-uids-of-interesting-points-summaries = !(interesting-points-summaries, vis
         else
           visitor ips, attr
 
-
-
 summarize = (ip)->
   if ip.type is 'web'
     ip.position-within-web-page = ip.within-location.at-position.position-within-web-page
@@ -41,6 +39,6 @@ summarize = (ip)->
 
 
 module.exports =
-  get-interesting-points-summaries: get-interesting-points-summaries
-  visit-uids-of-interesting-points-summaries: visit-uids-of-interesting-points-summaries
-  clean-ips-for-response: clean-ips-for-response # !!暴露出来，仅仅是为了测试
+  get-interesting-points-summaries-map: get-interesting-points-summaries-map
+  visit-uids-of-interesting-points-summaries-map: visit-uids-of-interesting-points-summaries-map
+  create-interesting-points-summaries-map: create-interesting-points-summaries-map # !!暴露出来，仅仅是为了测试

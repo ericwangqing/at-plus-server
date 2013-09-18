@@ -1,4 +1,4 @@
-require! [async, '../bin/database', '../bin/users-manager', '../bin/interesting-points-manager', '../bin/locations-manager']
+require! [async, '../bin/database']
 debug = require('debug')('at-plus')
 _ = require 'underscore'
 
@@ -77,19 +77,6 @@ chop-off-id = (obj)-> # 从服务端得回的数据，常常包括了由mongoDB�
         chop-off-id obj[key]
   obj
 
-get-test-initial-locations-response = (location-id, current-uid)->
-  locations = locations-manager.clean-locations-for-response load-fixture "locations-in-db"
-  interesting-points-summaries = interesting-points-manager.clean-ips-for-response load-fixture "interesting-points-in-db"
-  replace-uid-with-brief-user interesting-points-summaries, current-uid
-  response = (locations.filter (location)-> location._id is location-id)[0]
-  response.interesting-points-summaries = interesting-points-summaries[location-id]
-  response 
-
-replace-uid-with-brief-user = !(interesting-points-summaries, current-uid)->
-  brief-users-map = users-manager.clean-users-for-response (load-fixture 'users-in-db'), current-uid
-  interesting-points-manager.visit-uids-of-interesting-points-summaries interesting-points-summaries, !(value, attr)->
-    value[attr] = brief-users-map[value[attr]]
-
 
 module.exports =
   All-done-waiter: All-done-waiter
@@ -99,4 +86,3 @@ module.exports =
   prepare-clean-test-db: prepare-clean-test-db
   close-db: close-db
   chop-off-id: chop-off-id
-  get-test-initial-locations-response: get-test-initial-locations-response

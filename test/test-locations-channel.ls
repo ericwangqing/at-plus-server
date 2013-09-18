@@ -67,8 +67,8 @@ youku-url = "http://v.youku.com/v_show/id_XNjA1OTQ2OTI0.html"
 xiaodong-id = 'uid-1'
 baixin-id = 'uid-2'
 wangyu-id = 'uid-3'
-response-sysu-location = utils.get-test-initial-locations-response 'lid-1', xiaodong-id
-response-youku-location = utils.get-test-initial-locations-response 'lid-2', xiaodong-id
+response-sysu-location = responses-mocker.mock-locations-channel-initial-response 'lid-1', xiaodong-id
+response-youku-location = responses-mocker.mock-locations-channel-initial-response 'lid-2', xiaodong-id
 
 open-at-plus-on-locations = !(urls, uid, callback)->
   request-server {

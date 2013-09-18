@@ -4,7 +4,7 @@
 
 io = require 'socket.io-client'
 # patch = require './patch-io-client-with-session'
-require! {should, async, _: underscore, './utils', '../bin/channel-initial-wrapper', '../bin/server'}
+require! {should, async, _: underscore, './utils', './responses-mocker', '../bin/channel-initial-wrapper', '../bin/server'}
 debug = require('debug')('at-plus')
 
 base-url = 'http://localhost:3000'
