@@ -15,7 +15,7 @@ module.exports =
 
       response-initial-handler: !(socket, data, callback)->
         # socket.session.message = 'hello'
-        callback err = null, {
+        callback {
           sid: socket.id
           message: socket.session.message or 'hello'
         }
@@ -25,8 +25,7 @@ module.exports =
           socket.session.message = 'world'
           save-session!
           socket.emit 'change-session-response', null
-        callback err = null, {
-        }
+        callback!
     }
 
 

@@ -31,9 +31,9 @@ module.exports =
     config = get-safe-config config
     config.channel.on 'connection', !(socket)->
       (data, done) <-! socket.on 'request-initial'
-      (err, result) <-! config.request-initial-handler socket, data 
-      (err, result) <-! config.business-handlers-register socket, data # bussniess-handler、response-initial-handler可能都用不上data，加上data是为了API的整洁、漂亮
-      (err, result) <-! config.response-initial-handler socket, data
+      (result) <-! config.request-initial-handler socket, data 
+      (result) <-! config.business-handlers-register socket, data # bussniess-handler、response-initial-handler可能都用不上data，加上data是为了API的整洁、漂亮
+      (result) <-! config.response-initial-handler socket, data
       socket.emit 'response-initial', (result or {})
       done!
 
@@ -51,6 +51,6 @@ module.exports =
 
     <-! client.on 'connect'
     client.on 'response-initial', !(data)->
-      (err, result) <-! (get-safe-method config.business-handlers-register) client, data 
-    (err, result) <-! (get-safe-method config.resquest-initial-data-getter)
+      (result) <-! (get-safe-method config.business-handlers-register) client, data 
+    (result) <-! (get-safe-method config.resquest-initial-data-getter)
     client.emit 'request-initial', (result or config.request-initial-data or {})
