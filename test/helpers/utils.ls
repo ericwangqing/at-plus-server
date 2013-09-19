@@ -56,10 +56,12 @@ prepare-clean-test-db = !(done)->
   locations = load-fixture "locations-in-db"
   interesting-points = load-fixture "interesting-points-in-db"
   users = load-fixture "users-in-db"
+  messages = load-fixture "messages-in-db"
   open-clean-db-and-load-fixtures {
     'locations': locations
     'interesting-points': interesting-points
     'users': users
+    'messages': messages
   }, done
 
 close-db = !(done)->

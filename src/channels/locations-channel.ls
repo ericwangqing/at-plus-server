@@ -1,6 +1,6 @@
 # 文档和协议设计见：http://my.ss.sysu.edu.cn/wiki/display/AFWD/Locations+Channel+Protocol
 
-require! ['./locations-manager', './users-manager', './interesting-points-manager', './channel-initial-wrapper', './config']
+require! ['./locations-manager', './messages-manager', './users-manager', './interesting-points-manager', './channel-initial-wrapper', './config']
 _ = require 'underscore'
 business = require './event-bus'
 
@@ -17,7 +17,11 @@ prepare-location-data-for-initializing-client = !(locations, current-uid, callba
   (interesting-points-summaries-map) <-! interesting-points-manager.get-interesting-points-summaries-map [location._id for location in resolved-locations]
   uids = _.uniq get-users-attending-interesting-points interesting-points-summaries-map
   (brief-users-map) <-! users-manager.get-brief-users-map uids, current-uid
-  locations-data = get-response-initial-data resolved-locations, interesting-points-summaries-map, brief-users-map
+
+  ipids = _.uniq get-interesting-points-ids interesting-points-summaries-map
+  (recent-messages-map) <-! messages-manager.get-recent-messages-map ipids 
+
+  locations-data = get-response-initial-data resolved-locations, interesting-points-summaries-map, brief-users-map, recent-messages-map
   callback locations-data, inexistence-locations-urls
 
 fake-set-uid = !(socket, data)->
@@ -29,6 +33,15 @@ get-users-attending-interesting-points = (interesting-points-summaries-map)->
   interesting-points-manager.visit-uids-of-interesting-points-summaries-map interesting-points-summaries-map, (value, attr)->
     uids.push value[attr]
   uids
+
+get-interesting-points-ids = (interesting-points-summaries-map)->
+  ipids = []
+  for ips_array in _.values interesting-points-summaries-map
+    for ips in ips_array
+      ipids.push ips._id
+  ipids
+
+
 
 join-locations-rooms = !(socket, locations)->
   for location in locations
@@ -44,15 +57,20 @@ get-room = (inexistence-location-url)->
   # add prefix to url for distinguishing from location id
   config.locations-channel.inexistence-prefix + inexistence-location-url
 
-get-response-initial-data = (locations, interesting-points-summaries, brief-users-map)->
-  replace-uids-with-brief-users interesting-points-summaries, brief-users-map
+get-response-initial-data = (locations, interesting-points-summaries-map, brief-users-map, recent-messages-map)->
+  replace-uids-with-brief-users interesting-points-summaries-map, brief-users-map
   locations.for-each !(location)->
-    location.interesting-points-summaries = interesting-points-summaries[location._id] 
+    location.interesting-points-summaries = interesting-points-summaries-map[location._id] 
+    # debug "location.interesting-points-summaries: ", location.interesting-points-summaries
+    for ips in location.interesting-points-summaries
+      ips.recent-messages = recent-messages-map[ips._id]
+      # debug "ips: ", ips
+      # debug "ips.recent-messages: ", ips.recent-messages
     # location.interesting-points-summaries[0].commented-by = _.compact location.interesting-points-summaries[0].commented-by
   locations: locations
 
-replace-uids-with-brief-users = !(interesting-points-summaries, brief-users-map)->
-  interesting-points-manager.visit-uids-of-interesting-points-summaries-map interesting-points-summaries, (value, attr)->
+replace-uids-with-brief-users = !(interesting-points-summaries-map, brief-users-map)->
+  interesting-points-manager.visit-uids-of-interesting-points-summaries-map interesting-points-summaries-map, (value, attr)->
     value[attr] = brief-users-map[value[attr]]
 
 

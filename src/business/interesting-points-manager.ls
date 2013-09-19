@@ -15,9 +15,9 @@ create-interesting-points-summaries-map = (ips)->
   result
 
 
-visit-uids-of-interesting-points-summaries-map = !(interesting-points-summaries, visitor)->
+visit-uids-of-interesting-points-summaries-map = !(interesting-points-summaries-map, visitor)->
   attributes-with-uid = ['createdBy', 'commentedBy', 'sharedWith', 'watchedBy']
-  for ips-array in _.values interesting-points-summaries
+  for ips-array in _.values interesting-points-summaries-map
     for ips in ips-array
       for attr in attributes-with-uid
         value = ips[attr]

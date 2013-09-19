@@ -1,7 +1,7 @@
 message =
   _id: 'xxxx'
   type: 'ip-msg' # ip-msg | ip-rpl | chat-msg | chat-rpl
-  iid: void # interesting point id
+  ipid: void # interesting point id
   r-mid: void # the message replied to, only available when type either is ip-rpl or chat-rpl
   cid: 'cid-1' # chat id
   original-content-type: 'text' # text | voice
