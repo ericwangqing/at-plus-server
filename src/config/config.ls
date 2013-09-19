@@ -16,4 +16,4 @@ module.exports <<<
     type: 'in-momery' # in-memory | redis
   locations-channel:
     inexistence-prefix: '_|_|_INEXISTENCE'
-    amount-of-recent-messages-in-interesting-points: 1
+    amount-of-recent-messages-in-interesting-points: 2

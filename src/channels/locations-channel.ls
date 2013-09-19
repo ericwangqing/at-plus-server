@@ -35,13 +35,9 @@ get-users-attending-interesting-points = (interesting-points-summaries-map)->
   uids
 
 get-interesting-points-ids = (interesting-points-summaries-map)->
-  ipids = []
-  for ips_array in _.values interesting-points-summaries-map
-    for ips in ips_array
-      ipids.push ips._id
-  ipids
-
-
+  _.reduce (_.values interesting-points-summaries-map), (ipids, ips_array)->
+    ipids.concat _.pluck ips_array, '_id'
+  , []
 
 join-locations-rooms = !(socket, locations)->
   for location in locations

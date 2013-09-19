@@ -14,7 +14,6 @@ create-interesting-points-summaries-map = (ips)->
     result[ip.within-location.lid].push summarize ip
   result
 
-
 visit-uids-of-interesting-points-summaries-map = !(interesting-points-summaries-map, visitor)->
   attributes-with-uid = ['createdBy', 'commentedBy', 'sharedWith', 'watchedBy']
   for ips-array in _.values interesting-points-summaries-map

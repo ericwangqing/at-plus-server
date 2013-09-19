@@ -15,14 +15,8 @@ create-brief-recent-messages-map = (messages)->
   for message in messages
     recent-messages-map[message.ipid] ||= []
     if recent-messages-map[message.ipid].length < config.locations-channel.amount-of-recent-messages-in-interesting-points
-      recent-msg =
-        _id: message._id
-        create-time: message.create-time
-        send-by: message.send-by
-        permlink: message.permlink
+      recent-msg = _.pick message, 'createTime', 'sendBy', 'permlink', 'textContent', 'voiceContent'
       recent-msg.reposts = [repost.url for repost in message.reposts] if message.reposts
-      recent-msg.text-content = message.text-content if message.text-content
-      recent-msg.voice-content = message.voice-content if message.voice-content
       recent-messages-map[message.ipid].push recent-msg
 
   recent-messages-map
