@@ -30,9 +30,10 @@ module.exports =
   server-channel-initial-wrapper: !(config)->
     config = get-safe-config config
     config.channel.on 'connection', !(socket)->
+      # 这里形成了闭包，保障在business handler响应event-bus事件的时候，能够用到正确的socket
       (data, done) <-! socket.on 'request-initial'
       (result) <-! config.request-initial-handler socket, data 
-      (result) <-! config.business-handlers-register socket, data # bussniess-handler、response-initial-handler可能都用不上data，加上data是为了API的整洁、漂亮
+      (result) <-! config.business-handlers-register socket, data # bussniess-handler、response-initial-handler可能都用不上data，加上data是为了API的整洁、漂亮.
       (result) <-! config.response-initial-handler socket, data
       socket.emit 'response-initial', (result or {})
       done!

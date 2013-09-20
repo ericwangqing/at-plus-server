@@ -2,7 +2,7 @@
 
 require! ['./locations-manager', './messages-manager', './users-manager', './interesting-points-manager', './channel-initial-wrapper', './config']
 _ = require 'underscore'
-business = require './event-bus'
+event-bus = require './event-bus'
 
 
 request-initial-handler = !(socket, data, callback)->
@@ -69,6 +69,12 @@ replace-uids-with-brief-users = !(interesting-points-summaries-map, brief-users-
   interesting-points-manager.visit-uids-of-interesting-points-summaries-map interesting-points-summaries-map, (value, attr)->
     value[attr] = brief-users-map[value[attr]]
 
+change-url-room-to-location-room = !(location-channel, url, location)->
+  debug "------ in: 'change-url-room-to-location-room' ---------"
+  for client in location-channel.clients url
+    client.leave get-room url
+    client.join location._id
+
 
 module.exports  = 
   init: !(io)->
@@ -83,6 +89,24 @@ module.exports  =
           <-! locations-manager.update-location data.lid, data.update
           socket.broadcast.to(data.lid).emit 'response-update-location', data
           # debug 'response-update-location emitted at: ', data.lid
+
+        socket.on 'answer-location-internality', !(data)->
+          debug "------ in: 'answer-location-internality' ---------"
+          if (data.is-internal)
+            locations-manager.update-location-internality data.lid, true
+
+        # ----- 以下响应服务端business层的请求 ---------------- #
+        event-bus.on 'locations-channel:ask-location-internality', !(data)->
+          debug "------ in: 'locations-channel:ask-location-internality' ---------"
+          debug "------ emit: 'ask-location-internality' ---------"
+          socket.emit 'ask-location-internality', data
+
+
+        event-bus.on 'locations-channel:location-updated', !(data)~>
+          debug "------ in: 'locations-channel:location-updated' ---------"
+          change-url-room-to-location-room @channel, data.url, data.location
+          debug "------ broadcast: 'push-location-updated' ---------"
+          socket.broadcast.to(data.location.lid).emit 'push-location-updated', data.ip-summary
 
         # socket.on 'leave-location'
 

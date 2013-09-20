@@ -25,6 +25,7 @@ module.exports =
           socket.session.message = 'world'
           save-session!
           socket.emit 'change-session-response', null
+
         callback!
     }
 

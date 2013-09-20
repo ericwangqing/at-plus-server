@@ -36,8 +36,14 @@ summarize = (ip)->
   delete ip.type
   ip
 
+create-interesting-point = !(location-id, interesting-point-data, callback)->
+  debug "------ in: 'create-interesting-point' ---------"
+  callback {}
+
+
 
 module.exports =
   get-interesting-points-summaries-map: get-interesting-points-summaries-map
   visit-uids-of-interesting-points-summaries-map: visit-uids-of-interesting-points-summaries-map
+  create-interesting-point: create-interesting-point
   create-interesting-points-summaries-map: create-interesting-points-summaries-map # !!暴露出来，仅仅是为了测试
