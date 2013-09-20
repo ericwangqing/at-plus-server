@@ -8,7 +8,7 @@ describe '测试在新URL上创建新兴趣点时，Locations Channel与Interest
       open-at-plus-on-interesting-points-channel !(ip-channel, data)->
         ip-channel.on 'response-create-a-new-ip-on-a-new-url', !(data)->
           done!
-        ip-channel.emmit 'request-create-a-new-ip-on-a-new-url'
+        ip-channel.emit 'request-create-a-new-ip-on-a-new-url'
 
 
 

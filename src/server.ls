@@ -1,5 +1,5 @@
 require! [express, http, path, jade, 'socket.io', 'connect', './database', './patchs'
-  './default-channel', './locations-channel', './config', './session-store']
+  './default-channel', './locations-channel', './interesting-points-channel', './config', './session-store']
 
 port = process.env.PORT or config.server.port 
  
@@ -21,10 +21,11 @@ configure-at-plus-server = !->
 initial-at-plus-server = !->
   server.http-server = http.createServer server # 需要用http server包装一下，才能正确初始化socket.io
   io = socket.listen server.http-server
-  io.set 'log level', 1
+  # io.set 'log level', 1
 
   default-channel.init io
   locations-channel.init io
+  interesting-points-channel.init io
 
 patchs.patch-socket-with-accross-namespaces-session!
 

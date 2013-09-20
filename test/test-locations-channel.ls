@@ -1,42 +1,42 @@
-describe '测试location channel', !->
-  describe 'Client initial Locations Channel', !->
-    can 'inital后，查回两个已有locations的兴趣点列表', !(done)->
-      open-at-plus-on-locations [sysu-url, youku-url], xiaodong-id, !(socket, data)->
-          data.should.have.property('locations').with.length-of 2
-          data.locations.should.include-eql response-sysu-location
-          data.locations.should.include-eql response-youku-location
-          done!
+# describe '测试location channel', !->
+#   describe 'Client initial Locations Channel', !->
+#     can 'inital后，查回两个已有locations的兴趣点列表', !(done)->
+#       open-at-plus-on-locations [sysu-url, youku-url], xiaodong-id, !(socket, data)->
+#           data.should.have.property('locations').with.length-of 2
+#           data.locations.should.include-eql response-sysu-location
+#           data.locations.should.include-eql response-youku-location
+#           done!
 
-    can 'initial with一个已有，一个@+中还没有的location时，只给回一个已有兴趣点', !(done)->
-      open-at-plus-on-locations [sysu-url], xiaodong-id, !(socket, data)->
-          data.should.have.property('locations').with.length-of 1
-          data.locations.should.include-eql response-sysu-location # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
-          data.locations.should.not.include-eql response-youku-location # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
-          done!
+#     can 'initial with一个已有，一个@+中还没有的location时，只给回一个已有兴趣点', !(done)->
+#       open-at-plus-on-locations [sysu-url], xiaodong-id, !(socket, data)->
+#           data.should.have.property('locations').with.length-of 1
+#           data.locations.should.include-eql response-sysu-location # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
+#           data.locations.should.not.include-eql response-youku-location # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
+#           done!
 
-    can 'initial后，收听来自他人，自己也在的location的更新', !(done)->
-      (xiaodong, data) <-! open-at-plus-on-locations [sysu-url], xiaodong-id
-      (baixin, data) <-! open-at-plus-on-locations [sysu-url, youku-url] baixin-id
-      sysu-location = get-location data.locations, sysu-url
+#     can 'initial后，收听来自他人，自己也在的location的更新', !(done)->
+#       (xiaodong, data) <-! open-at-plus-on-locations [sysu-url], xiaodong-id
+#       (baixin, data) <-! open-at-plus-on-locations [sysu-url, youku-url] baixin-id
+#       sysu-location = get-location data.locations, sysu-url
 
-      xiaodong.on 'response-update-location', !(data)->
-        data.lid.should.eql sysu-location._id
-        data.message.should.eql '新的兴趣点'
-        done!
+#       xiaodong.on 'response-update-location', !(data)->
+#         data.lid.should.eql sysu-location._id
+#         data.message.should.eql '新的兴趣点'
+#         done!
 
-      baixin.emit 'request-update-location', {lid: sysu-location._id, message: '新的兴趣点'}
+#       baixin.emit 'request-update-location', {lid: sysu-location._id, message: '新的兴趣点'}
 
-    can 'initial后，收不到来自他人，自己不在的location的更新', !(done)->
-      (xiaodong, data) <-! open-at-plus-on-locations [sysu-url], xiaodong-id
-      (baixin, data) <-! open-at-plus-on-locations [sysu-url, youku-url], baixin-id
-      youku-location = get-location data.locations, youku-url
+#     can 'initial后，收不到来自他人，自己不在的location的更新', !(done)->
+#       (xiaodong, data) <-! open-at-plus-on-locations [sysu-url], xiaodong-id
+#       (baixin, data) <-! open-at-plus-on-locations [sysu-url, youku-url], baixin-id
+#       youku-location = get-location data.locations, youku-url
 
-      xiaodong.on 'response-update-location', !(data)->
-        should.fail '收到了来自自己不在的location的消息'
+#       xiaodong.on 'response-update-location', !(data)->
+#         should.fail '收到了来自自己不在的location的消息'
 
-      baixin.emit 'request-update-location', {lid: youku-location._id, message: '新的兴趣点'}
+#       baixin.emit 'request-update-location', {lid: youku-location._id, message: '新的兴趣点'}
 
-      set-timeout (-> done!), 1000
+#       set-timeout (-> done!), 1000
 
 
 
