@@ -2,145 +2,26 @@
 <diagram program="umlet" version="12.0">
   <zoom_level>9</zoom_level>
   <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>585</x>
-      <y>585</y>
-      <w>248</w>
-      <h>71</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;
-change url room to location room</panel_attributes>
-    <additional_attributes>90;54;126;54;126;27;90;27</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>252</x>
-      <y>99</y>
-      <w>90</w>
-      <h>27</h>
-    </coordinates>
-    <panel_attributes>_:IPsManager_
-bg=pink</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>441</x>
-      <y>315</y>
-      <w>233</w>
-      <h>84</h>
-    </coordinates>
-    <panel_attributes>lt=.&lt;
-ask internal or not
-lid, server-retrieved-html (srh)</panel_attributes>
-    <additional_attributes>216;45;27;45</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>360</x>
-      <y>225</y>
-      <w>284</w>
-      <h>71</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;
-update old location with this url as alias</panel_attributes>
-    <additional_attributes>108;54;144;54;144;27;108;27</additional_attributes>
-  </element>
-  <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
       <x>135</x>
       <y>153</y>
       <w>18</w>
-      <h>567</h>
+      <h>585</h>
     </coordinates>
     <panel_attributes>bg=red</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.SeqObjectActive</type>
-    <coordinates>
-      <x>288</x>
-      <y>153</y>
-      <w>18</w>
-      <h>567</h>
-    </coordinates>
-    <panel_attributes>bg=pink</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.Text</type>
-    <coordinates>
-      <x>765</x>
-      <y>63</y>
-      <w>72</w>
-      <h>27</h>
-    </coordinates>
-    <panel_attributes>: 方法调用</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>117</x>
-      <y>99</y>
-      <w>44</w>
-      <h>71</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>27;27;27;54</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>396</x>
-      <y>99</y>
-      <w>126</w>
-      <h>27</h>
-    </coordinates>
-    <panel_attributes>_:LocationsManager_
-bg=pink</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>126</x>
-      <y>540</y>
-      <w>341</w>
-      <h>84</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;
-update location with ip
-lid, iid, ip summary</panel_attributes>
-    <additional_attributes>324;45;27;45</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.InteractionFrame</type>
-    <coordinates>
-      <x>18</x>
-      <y>243</y>
-      <w>1035</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>find same
-</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>648</x>
-      <y>612</y>
+      <y>657</y>
       <w>287</w>
       <h>96</h>
     </coordinates>
     <panel_attributes>lt=.&lt;
-location updated 
+push-location-updated 
 (to all in location room)
 iid, ip-summary</panel_attributes>
     <additional_attributes>270;45;27;45</additional_attributes>
@@ -148,28 +29,15 @@ iid, ip-summary</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>441</x>
-      <y>549</y>
-      <w>233</w>
+      <x>405</x>
+      <y>315</y>
+      <w>299</w>
       <h>84</h>
     </coordinates>
     <panel_attributes>lt=.&lt;
-ask update location 
-url, lid, iid, ip-summary</panel_attributes>
-    <additional_attributes>216;45;27;45</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>441</x>
-      <y>414</y>
-      <w>233</w>
-      <h>84</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;
-update-internal-or-not
-lid, true | false</panel_attributes>
-    <additional_attributes>27;45;216;45</additional_attributes>
+locations-channel:ask-location-internality
+lid, server-retrieved-html (srh)</panel_attributes>
+    <additional_attributes>252;45;63;45</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -183,109 +51,18 @@ lid, true | false</panel_attributes>
     <additional_attributes>27;27;27;54</additional_attributes>
   </element>
   <element>
-    <type>com.umlet.element.custom.InteractionFrame</type>
-    <coordinates>
-      <x>18</x>
-      <y>342</y>
-      <w>1035</w>
-      <h>144</h>
-    </coordinates>
-    <panel_attributes>doesn't find
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.Text</type>
-    <coordinates>
-      <x>891</x>
-      <y>63</y>
-      <w>72</w>
-      <h>27</h>
-    </coordinates>
-    <panel_attributes>: 事件发送</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>432</x>
-      <y>99</y>
-      <w>44</w>
-      <h>71</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>27;27;27;54</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.SeqObjectActive</type>
-    <coordinates>
-      <x>918</x>
-      <y>153</y>
-      <w>18</w>
-      <h>549</h>
-    </coordinates>
-    <panel_attributes>bg=orange</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>126</x>
-      <y>468</y>
-      <w>179</w>
+      <y>261</y>
+      <w>341</w>
       <h>84</h>
-    </coordinates>
-    <panel_attributes>lt=&gt;
-create a new IP
-lid, ... </panel_attributes>
-    <additional_attributes>27;45;162;45</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>702</x>
-      <y>45</y>
-      <w>80</w>
-      <h>44</h>
-    </coordinates>
-    <panel_attributes>lt=-&gt;</panel_attributes>
-    <additional_attributes>27;27;63;27</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>342</x>
-      <y>180</y>
-      <w>315</w>
-      <h>71</h>
     </coordinates>
     <panel_attributes>lt=&lt;
-retrieve location html and compare with others</panel_attributes>
-    <additional_attributes>126;54;162;54;162;27;126;27</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>648</x>
-      <y>333</y>
-      <w>287</w>
-      <h>84</h>
-    </coordinates>
-    <panel_attributes>lt=.&lt;
-is location internal
-lid, srh</panel_attributes>
-    <additional_attributes>270;45;27;45</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>639</x>
-      <y>99</y>
-      <w>44</w>
-      <h>71</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>27;27;27;54</additional_attributes>
+the old location
+lid, ...
+</panel_attributes>
+    <additional_attributes>27;45;324;45</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
@@ -301,27 +78,64 @@ bg=red</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <type>com.umlet.element.Relation</type>
+    <type>com.umlet.element.custom.InteractionFrame</type>
     <coordinates>
-      <x>72</x>
-      <y>99</y>
-      <w>908</w>
-      <h>98</h>
+      <x>18</x>
+      <y>342</y>
+      <w>1035</w>
+      <h>153</h>
     </coordinates>
-    <panel_attributes>lt=.&gt;
-create a new IP on a new location </panel_attributes>
-    <additional_attributes>864;72;891;72;891;45;27;45;27;81;63;81</additional_attributes>
+    <panel_attributes>doesn't find
+</panel_attributes>
+    <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>828</x>
-      <y>45</y>
+      <x>702</x>
+      <y>54</y>
       <w>80</w>
       <h>44</h>
     </coordinates>
-    <panel_attributes>lt=.&gt;</panel_attributes>
+    <panel_attributes>lt=-&lt;</panel_attributes>
     <additional_attributes>27;27;63;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>450</x>
+      <y>153</y>
+      <w>18</w>
+      <h>576</h>
+    </coordinates>
+    <panel_attributes>bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>126</x>
+      <y>585</y>
+      <w>341</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+update location with ip
+lid, iid, ip summary</panel_attributes>
+    <additional_attributes>324;45;27;45</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>648</x>
+      <y>333</y>
+      <w>287</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=.&lt;
+ask-location-internality
+lid, srh</panel_attributes>
+    <additional_attributes>270;45;27;45</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.custom.Text</type>
@@ -335,16 +149,14 @@ create a new IP on a new location </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <type>com.umlet.element.Class</type>
+    <type>com.umlet.element.custom.Text</type>
     <coordinates>
-      <x>90</x>
-      <y>99</y>
-      <w>108</w>
+      <x>765</x>
+      <y>63</y>
+      <w>72</w>
       <h>27</h>
     </coordinates>
-    <panel_attributes>_:IPsChannel_
-_
-bg=red</panel_attributes>
+    <panel_attributes>: 方法调用</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -363,27 +175,81 @@ url, ip summary</panel_attributes>
   <element>
     <type>com.umlet.element.custom.SeqObjectActive</type>
     <coordinates>
-      <x>657</x>
+      <x>288</x>
       <y>153</y>
       <w>18</w>
-      <h>558</h>
+      <h>585</h>
     </coordinates>
-    <panel_attributes>bg=red</panel_attributes>
+    <panel_attributes>bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>396</x>
+      <y>99</y>
+      <w>126</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>_:LocationsManager_
+bg=pink</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>126</x>
-      <y>261</y>
-      <w>341</w>
-      <h>84</h>
+      <x>117</x>
+      <y>99</y>
+      <w>44</w>
+      <h>71</h>
     </coordinates>
-    <panel_attributes>lt=&lt;
-the old location
-lid, ...
-</panel_attributes>
-    <additional_attributes>27;45;324;45</additional_attributes>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>27;27;27;54</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>702</x>
+      <y>45</y>
+      <w>80</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>27;27;63;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>252</x>
+      <y>99</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>_:IPsManager_
+bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.Text</type>
+    <coordinates>
+      <x>891</x>
+      <y>63</y>
+      <w>72</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>: 事件发送</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>639</x>
+      <y>99</y>
+      <w>44</w>
+      <h>71</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>27;27;27;54</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -401,12 +267,25 @@ client retrieved html</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>702</x>
-      <y>54</y>
+      <x>126</x>
+      <y>468</y>
+      <w>179</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+create a new IP
+lid, ... </panel_attributes>
+    <additional_attributes>27;45;162;45</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>828</x>
+      <y>45</y>
       <w>80</w>
       <h>44</h>
     </coordinates>
-    <panel_attributes>lt=-&lt;</panel_attributes>
+    <panel_attributes>lt=.&gt;</panel_attributes>
     <additional_attributes>27;27;63;27</additional_attributes>
   </element>
   <element>
@@ -418,9 +297,168 @@ client retrieved html</panel_attributes>
       <h>84</h>
     </coordinates>
     <panel_attributes>lt=.&lt;
-report internal or not
+answer-location-internality
 lid, true | false</panel_attributes>
     <additional_attributes>27;45;270;45</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>72</x>
+      <y>99</y>
+      <w>908</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+request-create-a-new-ip-on-a-new-url</panel_attributes>
+    <additional_attributes>864;72;891;72;891;45;27;45;27;81;63;81</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>432</x>
+      <y>99</y>
+      <w>44</w>
+      <h>71</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>27;27;27;54</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>126</x>
+      <y>504</y>
+      <w>179</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+a new IP
+iid, ...
+</panel_attributes>
+    <additional_attributes>27;45;162;45</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.InteractionFrame</type>
+    <coordinates>
+      <x>18</x>
+      <y>243</y>
+      <w>1035</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>find same
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>432</x>
+      <y>594</y>
+      <w>259</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=.&lt;
+locations-channel:location-updated 
+url, lid, iid, ip-summary</panel_attributes>
+    <additional_attributes>225;45;36;45</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>882</x>
+      <y>99</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>_:Client_
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>90</x>
+      <y>99</y>
+      <w>108</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>_:IPsChannel_
+_
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>918</x>
+      <y>153</y>
+      <w>18</w>
+      <h>576</h>
+    </coordinates>
+    <panel_attributes>bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>360</x>
+      <y>225</y>
+      <w>284</w>
+      <h>71</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+update old location with this url as alias</panel_attributes>
+    <additional_attributes>108;54;144;54;144;27;108;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>585</x>
+      <y>630</y>
+      <w>248</w>
+      <h>71</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+change url room to location room</panel_attributes>
+    <additional_attributes>90;54;126;54;126;27;90;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SeqObjectActive</type>
+    <coordinates>
+      <x>657</x>
+      <y>153</y>
+      <w>18</w>
+      <h>576</h>
+    </coordinates>
+    <panel_attributes>bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>441</x>
+      <y>414</y>
+      <w>233</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+update-location-internality
+lid, true | false</panel_attributes>
+    <additional_attributes>27;45;216;45</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>126</x>
+      <y>549</y>
+      <w>809</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=.&lt;
+response-create-a-new-ip-on-a-new-url
+</panel_attributes>
+    <additional_attributes>792;45;27;45</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -436,6 +474,18 @@ lid, true | false</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
+      <x>342</x>
+      <y>180</y>
+      <w>315</w>
+      <h>71</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;
+retrieve location html and compare with others</panel_attributes>
+    <additional_attributes>126;54;162;54;162;27;126;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
       <x>126</x>
       <y>333</y>
       <w>341</w>
@@ -446,42 +496,5 @@ a new location
 lid, ...
 </panel_attributes>
     <additional_attributes>27;45;324;45</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.SeqObjectActive</type>
-    <coordinates>
-      <x>450</x>
-      <y>153</y>
-      <w>18</w>
-      <h>558</h>
-    </coordinates>
-    <panel_attributes>bg=pink</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>882</x>
-      <y>99</y>
-      <w>90</w>
-      <h>27</h>
-    </coordinates>
-    <panel_attributes>_:Client_
-bg=orange</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>126</x>
-      <y>504</y>
-      <w>179</w>
-      <h>84</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;
-a new IP
-iid, ...
-</panel_attributes>
-    <additional_attributes>27;45;162;45</additional_attributes>
   </element>
 </diagram>

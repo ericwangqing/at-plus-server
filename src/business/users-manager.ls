@@ -21,7 +21,7 @@ create-brief-users-map = (users, current-uid)->
         name: user.username
         avatar: user.avatars[0]
       brief-users-map[user._id].is-my-friend = true if user._id in current-user.friends
-      brief-users-map[user._id].is-my-friend = true if user._id in current-user.follows
+      brief-users-map[user._id].is-followed-by-me = true if user._id in current-user.follows
   brief-users-map
 
 get-user-by-id = !(users, id)->
