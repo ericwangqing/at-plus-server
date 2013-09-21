@@ -49,19 +49,18 @@ describe '测试location channel', !->
 
   before-each !(done)->
     <-! server.start
-    (require 'socket.io-client/lib/io.js').sockets = {} # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
+    socket-helper.clear-all-client-sockets! # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
     utils.prepare-clean-test-db done
     debug 'prepare-clean-test-db complete'
 
   after-each !(done)->
     utils.close-db !->
-      utils.Sockets-distroyer.get!.destroy-all!
+      socket-helper.Sockets-distroyer.get!.destroy-all!
       server.shutdown!
       done!
 
 # ---------------------- 美丽的分割线，以下辅助代码 ----------------------- #
 
-locations-channel-url = base-url + "/locations"
 sysu-url = "http://ss.sysu.edu.cn/InformationSystem/"
 youku-url = "http://v.youku.com/v_show/id_XNjA1OTQ2OTI0.html"
 xiaodong-id = 'uid-1'
@@ -71,21 +70,22 @@ response-sysu-location = responses-mocker.mock-locations-channel-initial-respons
 response-youku-location = responses-mocker.mock-locations-channel-initial-response 'lid-2', xiaodong-id
 
 open-at-plus-on-locations = !(urls, uid, callback)->
-  request-server {
-    url: locations-channel-url
-    request-initial-data:
-      uid: uid
-      locations:
-        type: "web"
-        urls: urls
-    },
-    !(socket, initial-data)->
-      utils.Sockets-distroyer.get!.add-socket socket # 为了在每个测试结束，关闭服务端的socket，以便隔离各个测例。
-      callback socket, initial-data
+  socket-helper.initial-client {
+    default-channel: {}
+    testing-helper-channel: options: request-initial-data: fake-uid: uid
+    locations-channel: 
+      options:
+        request-initial-data:
+          locations:
+            type: "web"
+            urls: urls
+      business-handler-register: !(socket, data)->
+        socket-helper.Sockets-distroyer.get!.add-socket socket # 为了在每个测试结束，关闭服务端的socket，以便隔离各个测例。
+        callback socket, data
+  }, !->
+    # debug "客户端初始化完成"
+
 
 get-location = (locations, url)->
   for location in locations
     return location if url in location.urls
-
-
-

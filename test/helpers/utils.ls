@@ -1,32 +1,18 @@
-require! [async, '../bin/database']
+require! [async, '../bin/database', '../bin/config']
 debug = require('debug')('at-plus')
 _ = require 'underscore'
 
 FIXTURE_PATH = __dirname + '/../test-bin/' # 这样写，是因为在开发时，src目录中的代码也会使用。
 
 #------------------- Utility Classes ------------------#
-class Sockets-distroyer # Singleton
-  instance = null
-
-  class Destroyer
-    !->
-      @client-sockets = []
-    add-socket: !(socket)->
-      @client-sockets.push socket
-    destroy-all: !->
-      for socket in @client-sockets
-        socket = socket.socket if socket.socket # 当socket.io 连接到有namespace的情况要用socket.socket.disconnect!
-        socket.disconnect!
-      @client-sockets = []
-
-  @get = (socket)->
-    instance ?:= new Destroyer socket
-
 class All-done-waiter
   !(@done)->
     @running-functions = 0
 
-  add-wating-function: (fn)->
+  set-done: (done)->
+    @done = done
+
+  add-waiting-function: (fn)->
     @running-functions += 1
     !~>
       fn.apply null, arguments if fn
@@ -82,7 +68,6 @@ chop-off-id = (obj)-> # 从服务端得回的数据，常常包括了由mongoDB�
 
 module.exports =
   All-done-waiter: All-done-waiter
-  Sockets-distroyer: Sockets-distroyer
   load-fixture: load-fixture
   open-clean-db-and-load-fixtures: open-clean-db-and-load-fixtures
   prepare-clean-test-db: prepare-clean-test-db

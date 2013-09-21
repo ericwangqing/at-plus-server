@@ -1,4 +1,4 @@
-require! ['./database']
+require! ['./database', './testing-helper-channel'.get-testing-control]
 event-bus = require './event-bus'
 _ = require 'underscore'
 
@@ -37,8 +37,8 @@ create-or-update-a-location = !(url, callback)->
 
 get-old-or-create-new-location = !(url, callback)->
   debug "------ in: 'get-old-or-create-new-location' ---------"
-  location = {}
-  is-new = if Math.random! < 0.5 then true else false
+  location = {_id: Math.random!}
+  is-new = if get-testing-control!.locations-manager.get-old-or-create-new-location.is-new then true else false
   callback is-new, location
 
 update-location-internality = !(lid, is-internal, callback)->
@@ -58,7 +58,7 @@ update-location-with-ip = !(url, lid, interesting-point, callback)->
 
 get-location-by-id = !(lid, callback)->
   debug "------ in: 'get-location-by-id' ---------"
-  callback {}
+  callback {_id: Math.random!}
 
 
 

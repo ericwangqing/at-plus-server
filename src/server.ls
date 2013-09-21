@@ -1,5 +1,5 @@
 require! [express, http, path, jade, 'socket.io', 'connect', './database', './patchs'
-  './default-channel', './locations-channel', './interesting-points-channel', './config', './session-store']
+  './default-channel', './testing-helper-channel', './locations-channel', './interesting-points-channel', './config', './session-store']
 
 port = process.env.PORT or config.server.port 
  
@@ -24,6 +24,7 @@ initial-at-plus-server = !->
   io.set 'log level', 1
 
   default-channel.init io
+  testing-helper-channel.init io # ！！注意：仅用于测试，正式发布时需要去掉。
   locations-channel.init io
   interesting-points-channel.init io
 

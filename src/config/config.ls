@@ -5,6 +5,7 @@
 module.exports <<< 
   server:
     port: 3000
+    base-url: 'http://localhost:3000'
   mongo:
     host: \localhost
     port: 27017

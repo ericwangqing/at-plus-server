@@ -12,49 +12,49 @@ describe '测试在新URL上创建新兴趣点时，Locations Channel与Interest
           locations-channel.emit 'answer-location-internality', is-internal: fake-figure-out-location-internality data.url, data.server-retrieved-html
 
         locations-channel.on 'push-location-updated', !(data)->
-          debug "@+ Client: ======== in 'push-location-updated' =========="
+          debug "@+ Client: ======== in 'push-location-updated' ==========, channel id: ", locations-channel.socket.sessionid
 
 
         ip-channel.on 'response-create-a-new-ip-on-a-new-url', !(data)->
           debug "@+ Client: ======== ip-channel in 'response-create-a-new-ip-on-a-new-url' =========="
-          set-timeout (!-> done!), 500 # 等待所有通信完成。
-        debug "@+ Client: ======== ip-channel emit 'request-create-a-new-ip-on-a-new-url' =========="
+          set-timeout (!-> done!), 300 # 等待所有通信完成。
+        debug "@+ Client: ======== ip-channelemit 'request-create-a-new-ip-on-a-new-url' =========="
         ip-channel.emit 'request-create-a-new-ip-on-a-new-url'
 
+      can "创建兴趣点时的URL，被识别为已有location。能够收到正确的Ï'response-create-a-new-ip-on-a-new-url'和'push-location-updated'消息", !(done)->
 
 
   before-each !(done)->
     <-! server.start
-    (require 'socket.io-client/lib/io.js').sockets = {} # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
+    socket-helper.clear-all-client-sockets! # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
     utils.prepare-clean-test-db done
     debug 'prepare-clean-test-db complete'
 
   after-each !(done)->
     utils.close-db !->
-      utils.Sockets-distroyer.get!.destroy-all!
+      socket-helper.Sockets-distroyer.get!.destroy-all!
       server.shutdown!
       done!
 
 # ---------------------- 美丽的分割线，以下辅助代码 ----------------------- #
-default-channel-url = base-url
-locations-channel-url = base-url + "/locations"
-interesting-points-channel-url = base-url + "/interesting-points"
-no-new-connection-options = {'force new connection': false}
 
 open-at-plus-on-default-locations-and-interesting-points-channels = !(callback)->
-  request-server {url: default-channel-url, options: no-new-connection-options}
-  ,
-  !(socket, initial-data)->
-    request-server {url: locations-channel-url, options: no-new-connection-options}
-    ,
-    !(socket, initial-data)->
-      locations-channel = socket
-      request-server {url: interesting-points-channel-url, options: no-new-connection-options}
-      ,
-      !(socket, initial-data)->
-        interesting-points-channel = socket
-        utils.Sockets-distroyer.get!.add-socket socket # 为了在每个测试结束，关闭服务端的socket，以便隔离各个测例。
-        callback locations-channel, interesting-points-channel, initial-data
+  channels = null
+  waiter = new utils.All-done-waiter! # 用以保存各个频道的channels，在所有回调结束后才可用。
+  socket-helper.initial-client {
+    default-channel: {}
+    testing-helper-channel: options: request-initial-data: 
+      # fake-uid: uid
+      testing-control: locations-manager: get-old-or-create-new-location: is-new: false
+    locations-channel: {}
+    interesting-points-channel: business-handler-register: !(socket, data)->
+      socket-helper.Sockets-distroyer.get!.add-socket socket # 为了在每个测试结束，关闭服务端的socket，以便隔离各个测例。
+      waiter.set-done -> 
+        callback channels.locations-channel, channels.interesting-points-channel, data
+  }, waiter.add-waiting-function !(cs)->
+    channels := cs
+    debug "客户端初始化完毕"   
+
 
 fake-figure-out-location-internality = (url, server-retrieved-html)->
   # debug ' .... 真实的client会在这里将server-retrieved-html和自己打开的location（url）中的源码进行比较，确定是否一致。一致则是not internal，否则是internal ...'
