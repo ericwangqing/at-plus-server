@@ -101,14 +101,14 @@ module.exports  =
         event-bus.on 'locations-channel:ask-location-internality', !(data)->
           debug "------ in: 'locations-channel:ask-location-internality' --------- socket: ", socket.id
           debug "------ emit: 'ask-location-internality' ---------"
-          socket.emit 'ask-location-internality', data
+          socket.emit 'ask-location-internality', data if socket.id is data.session-id
 
 
         event-bus.on 'locations-channel:location-updated', !(data)~>
           debug "------ in: 'locations-channel:location-updated' --------- socket: ", socket.id
           change-url-room-to-location-room @channel, data.url, data.location
           debug "------ broadcast: 'push-location-updated' ---------"
-          socket.broadcast.to(data.location.lid).emit 'push-location-updated', data.ip-summary
+          socket.broadcast.to(data.location.lid).emit 'push-location-updated', data.ip-summary if socket.id is data.session-id
 
         # socket.on 'leave-location'
 

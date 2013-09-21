@@ -12,12 +12,12 @@ module.exports  =
       business-handlers-register: !(socket, data, callback)->
         # ----- 以下响应来自客户端的请求 ---------------- #
         socket.on 'request-create-a-new-ip-on-a-new-url', !(data)->
-          debug "------ in: 'request-create-a-new-ip-on-a-new-url' ---------"
-          (location) <-! locations-manager.create-or-update-a-location data.url
+          debug "------ in: 'request-create-a-new-ip-on-a-new-url', socket.id: ---------", socket.id
+          (location) <-! locations-manager.create-or-update-a-location socket.id, data.url
           (interesting-point) <-! interesting-points-manager.create-interesting-point location._id, data.interesting-point
           debug "------ emit: 'response-create-a-new-ip-on-a-new-url' ---------"
           socket.emit 'response-create-a-new-ip-on-a-new-url', result: 'success'
-          locations-manager.update-location-with-ip data.url, location.id, interesting-point
+          locations-manager.update-location-with-ip socket.id, data.url, location.id, interesting-point
 
         callback!
         

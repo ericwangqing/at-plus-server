@@ -23,12 +23,13 @@ update-location = !(lid, update-data, callback)->
 create-locations-for-response = (locations)->
   [_.omit location, 'duration', 'retrievedHtml' for location in locations]
 
-create-or-update-a-location = !(url, callback)->
+create-or-update-a-location = !(session-id, url, callback)->
   debug "------ in: 'create-or-update-a-location' ---------"
   (is-new, location) <-! get-old-or-create-new-location url
   if is-new
     debug "********* emit: 'ask-location-internality' *********"
     event-bus.emit 'locations-channel:ask-location-internality', 
+      session-id: session-id
       lid: location._id
       server-retrieved-html: location.server-retrieved-html
     callback location
@@ -45,11 +46,12 @@ update-location-internality = !(lid, is-internal, callback)->
   debug "------ in: 'update-location-internality' ---------"
   callback! if callback
 
-update-location-with-ip = !(url, lid, interesting-point, callback)->
+update-location-with-ip = !(session-id, url, lid, interesting-point, callback)->
   debug "------ in: 'update-location-with-ip' ---------"
   (location) <-! get-location-by-id lid
   debug "------ emit: 'locations-channel:location-updated' ---------"
   event-bus.emit 'locations-channel:location-updated',
+    session-id: session-id
     url: url
     location: location
     ip-summary: {}
