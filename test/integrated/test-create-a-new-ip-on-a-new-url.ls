@@ -41,8 +41,12 @@ describe '测试在新URL上创建新兴趣点时，Locations Channel与Interest
   #       xiaodong.ip.emit 'request-create-a-new-ip-on-a-new-url'     
 
   describe '创建兴趣点后，客户端接收到正确的数据，服务端正确保存了兴趣点', !->
-    testing-data = null
+    testing-data = total-locations-in-db = total-interestiong-points-in-db = null
     before-each !->
+      (amount) <-! count-locaitons-in-db
+      total-locations-in-db := amount
+      (amount) <-! count-interesting-points-in-db
+      total-interestiong-points-in-db := amount
       testing-data := prepare-testing-data!
 
     describe 'url为已有locatoin的alias时，消息内容正确，兴趣点正确保存', !->
@@ -52,22 +56,25 @@ describe '测试在新URL上创建新兴趣点时，Locations Channel与Interest
           debug "创建者收到创建成功消息"
           data.should.have.property 'lid'
           data.should.have.property 'ipid'
-          data.result.should.be 'success'
+          data.result.should.eql 'success'
 
           done-waiter = wait!
-          <-! should-db-not-include-any-new-location
-          <-! should-db-include-the-requested-new-ip testing-data.request-create-a-new-ip-on-a-new-url
+          debug "total-locations-in-db: #{total-locations-in-db}, total-interestiong-points-in-db: #{total-interestiong-points-in-db}"
+          <-! should-db-not-include-any-new-location total-locations-in-db
+          <-! should-new-location-url-added-as-alias testing-data.request-create-a-new-ip-on-a-new-url
+          # <-! should-db-include-a-new-interesting-point total-interestiong-points-in-db
+          # <-! should-db-include-the-requested-new-ip testing-data.request-create-a-new-ip-on-a-new-url
           done-waiter!
 
         baixin.ip.on 'response-create-a-new-ip-on-a-new-url', !(data)-> should.fail "非创建者收到了'response-create-a-new-ip-on-a-new-url'"
 
         baixin.locations.on 'push-location-updated', wait !(data)-> 
           debug "非创建者收到location更新消息"
-          data.type.should.be 'new-ip-added'
+          data.type.should.eql 'new-ip-added'
           data.should.have.property '_id'
           data.added-interesting-point.should.have.property '_id'
           data.added-interesting-point.created-by.should.have.property '_id'
-          (utils.chop-of-id data).should.eql (utils.chop-off-id testing-data.push-location-updated)
+          (utils.chop-off-id data).should.eql (utils.chop-off-id testing-data.push-location-updated)
 
         xiaodong.locations.on 'push-location-updated', !(data)-> should.fail "创建者收到了'push-location-updated'"
 
@@ -139,10 +146,49 @@ debug-output-client-request-and-response-steps = !(locations-channel, ip-channel
 
 prepare-testing-data = ->
   request-create-a-new-ip-on-a-new-url: utils.load-fixture 'request-create-a-new-ip-on-a-new-url'
-  push-location-updated: utils.load-fixture 'request-create-a-new-ip-on-a-new-url'
-
-
+  push-location-updated: utils.load-fixture 'push-location-updated'
 
 fake-figure-out-location-internality = (url, server-retrieved-html)->
   # debug ' .... 真实的client会在这里将server-retrieved-html和自己打开的location（url）中的源码进行比较，确定是否一致。一致则是not internal，否则是internal ...'
   true # 测试用true，激发服务器响应行为
+
+count-locaitons-in-db = !(callback)->
+  count-amount-of-docs-in-a-collection 'locations', callback
+
+count-interesting-points-in-db = !(callback)->
+  count-amount-of-docs-in-a-collection 'interesting-points', callback
+
+count-amount-of-docs-in-a-collection = !(collection-name, callback)->
+  (results) <-! query-collection collection-name, {}
+  callback results.length
+
+should-db-not-include-any-new-location = !(old-amount, callback)->
+  (locations) <-! query-collection 'locations', {}
+  locations.length.should.eql old-amount
+  callback!
+
+should-new-location-url-added-as-alias = !(new-ip, callback)->
+  debug "new-ip.within-location.url: ", new-ip.within-location.url
+  (locations) <-! query-collection 'locations', {urls: new-ip.within-location.url}
+  locations.length.should.eql 1
+  callback!
+
+
+should-db-include-a-new-interesting-point = !(old-amount, callback)->
+  (locations) <-! query-collection 'interesting-points', {} 
+  locations.length.should.eql old-amount + 1
+  callback!
+
+should-db-include-the-requested-new-ip = !(new-ip, callback)->
+  (locations) <-! query-collection 'locations', {urls: new-ip.within-location.url}
+  (locations) <-! query-collection 'interesting-points', {'withiLocation.lid': locations[0]._id} 
+  ips.length.should.eql 1
+  callback!
+
+query-collection = !(collection-name, query-obj, callback)->
+  (db) <-! database.get-db
+  (err, results) <-! db.at-plus[collection-name].find query-obj .to-array
+  callback results
+
+
+

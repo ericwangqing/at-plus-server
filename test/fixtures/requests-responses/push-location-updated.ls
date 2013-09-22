@@ -29,4 +29,3 @@ update =
       size:
         width: "20em"
         height: "20em"
-

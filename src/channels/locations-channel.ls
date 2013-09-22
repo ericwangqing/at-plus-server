@@ -77,6 +77,10 @@ change-url-room-to-location-room = !(location-channel, url, location)->
     client.leave get-room url
     client.join location._id
 
+get-push-location-updated-message = (data)->
+  type: "new-ip-added"
+  _id: data.location._id
+  added-interesting-point: data.interesting-point-summary
 
 module.exports  = 
   init: !(io)->
@@ -108,7 +112,7 @@ module.exports  =
           debug "------ in: 'locations-channel:location-updated' --------- socket: ", socket.id
           change-url-room-to-location-room @channel, data.url, data.location
           debug "------ broadcast: 'push-location-updated' ---------"
-          socket.broadcast.to(data.location.lid).emit 'push-location-updated', data.ip-summary if socket.id is data.session-id
+          socket.broadcast.to(data.location.lid).emit 'push-location-updated', get-push-location-updated-message data if socket.id is data.session-id
 
         # socket.on 'leave-location'
 

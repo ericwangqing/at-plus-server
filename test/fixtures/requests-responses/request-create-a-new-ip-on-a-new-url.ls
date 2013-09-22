@@ -7,7 +7,7 @@ intinteresting-point =
     location-type: 'web' #!! derived from location
     url: 'http://some.com' # !!duplicated from location
     name: "url未知的神秘所在" #!!duplicated from location
-    at-poisition: # position的所有信息都内嵌在这里，没有单独的position document
+    at-position: # position的所有信息都内嵌在这里，没有单独的position document
       position-within-web-page:
         related-text-content: '人们可以在任何网页上自由评论，吐槽' # 兴趣点圈划包括的网页上的文字。
         related-image: 'http://some.com/images/1.jpg'# 兴趣点圈划包括的网页上的图片，这里存储图片的URL。
@@ -20,4 +20,6 @@ intinteresting-point =
   pictures: # 这里有待确定是在客户端捕获网页快照，还是在服务端screen scraper
     * type: 'snapshoot' # snapshoot | photo
       url: '/user-pictures/uid-1/1' # uid为creator的id，资源为：http://at-plus-server/pictures/uid/2
+      createTime: "2013-02-04 12:00:04"
+    ...
   tags: ['tid-1', 'tid-2']

@@ -1,4 +1,4 @@
-require! ['./database', './testing-helper-channel'.get-testing-control]
+require! ['./database', './web-monitor']
 event-bus = require './event-bus'
 _ = require 'underscore'
 
@@ -23,38 +23,65 @@ update-location = !(lid, update-data, callback)->
 create-locations-for-response = (locations)->
   [_.omit location, 'duration', 'retrievedHtml' for location in locations]
 
-create-or-update-a-location = !(session-id, url, callback)->
+create-or-update-a-location = !(session-id, url-data, callback)->
   debug "------ in: 'create-or-update-a-location' ---------"
-  (is-new, location) <-! get-old-or-create-new-location url
+  (is-new, location) <-! get-old-or-create-new-location url-data
   if is-new
     debug "********* emit: 'ask-location-internality' *********"
     event-bus.emit 'locations-channel:ask-location-internality', 
       session-id: session-id
       lid: location._id
+      url: url-data.url
       server-retrieved-html: location.server-retrieved-html
     callback location
   else
     callback location
 
-get-old-or-create-new-location = !(url, callback)->
+get-old-or-create-new-location = !(url-data, callback)->
   debug "------ in: 'get-old-or-create-new-location' ---------"
+  (found-location, new-web-page) <-! web-monitor.find-location-for-url url-data
+  if found-location
+    found-location.urls.push url-data.url
+    (db) <-! database.get-db
+    (err, location) <-! db.at-plus.locations.save found-location
+    callback false, found-location
+  else
+    current-time = new Date!
+    (db) <-! database.get-db
+    (err, location) <-! db.at-plus.locations.insert {
+      type: 'web'
+      name: url-data.name
+      is-existing: true
+      is-internal: false #此为默认值，随后会让客户端协助查询，如果为internal，则更新为true
+      duration: 
+        from: current-time
+        to: current-time
+      urls: [url-data.url]
+      retrieved-html: new-web-page.retrieved-html
+    }
+    place-web-page-snapshot new-web-page.snapshot, location._id
+    callback true, location
+
+place-web-page-snapshot = !(snapshot, lid)->
+  debug "*************** place-web-page-snapshot 尚未实现 ***************"
+  # 将snapshot，放到恰当位置，能够通过 /web-page-snapshot/lid 访问
+
   location = {_id: Math.random!}
-  is-new = if get-testing-control!.locations-manager.get-old-or-create-new-location.is-new then true else false
+  is-new = if get-testing-control!.locations-manager.get-old-or-create  -new-location.is-new then true else false
   callback is-new, location
 
 update-location-internality = !(lid, is-internal, callback)->
   debug "------ in: 'update-location-internality' ---------"
   callback! if callback
 
-update-location-with-ip = !(session-id, url, lid, interesting-point, callback)->
+update-location-with-ip = !(session-id, url, location, interesting-point-summary, callback)->
   debug "------ in: 'update-location-with-ip' ---------"
-  (location) <-! get-location-by-id lid
   debug "------ emit: 'locations-channel:location-updated' ---------"
   event-bus.emit 'locations-channel:location-updated',
     session-id: session-id
     url: url
     location: location
-    ip-summary: {}
+    interesting-point-summary: interesting-point-summary
 
   callback! if callback
 

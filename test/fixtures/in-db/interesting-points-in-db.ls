@@ -7,9 +7,6 @@ interesting-points =
     create-time: '2013-08-18 23:11:09'
     within-location:
       lid: 'lid-1'
-      location-type: 'web' #!! derived from location
-      urls: ["http://ss.sysu.edu.cn/InformationSystem/", "http://ss.sysu.edu.cn/"]
-      name: "中山大学软件学院" #!!duplicated from location
       at-position: # position的所有信息都内嵌在这里，没有单独的position document
         is-exist: true # default
         position-within-web-page:
@@ -44,9 +41,6 @@ interesting-points =
     create-time: '2013-08-18 23:11:09'
     within-location:
       lid: 'lid-1'
-      location-type: 'web' #!! derived from location
-      urls: ["http://ss.sysu.edu.cn/InformationSystem/", "http://ss.sysu.edu.cn/"]
-      name: "中山大学软件学院" #!!duplicated from location
       at-position: # position的所有信息都内嵌在这里，没有单独的position document
         is-exist: true # default
         position-within-web-page:
@@ -81,9 +75,6 @@ interesting-points =
     create-time: '2013-08-18 23:11:09'
     within-location:
       lid: 'lid-2'
-      location-type: 'web' #!! derived from location
-      name: "【全场集锦】-于大宝郑龙2球张稀哲传射 国足6-1践行誓言—在线播放—优酷网，视频高清在线观看",
-      urls: ["http://v.youku.com/v_show/id_XNjA1OTQ2OTI0.html"],
       at-position: # position的所有信息都内嵌在这里，没有单独的position document
         is-exist: true # default
         position-within-web-page:
@@ -112,9 +103,6 @@ interesting-points =
     create-time: '2013-08-18 23:11:09'
     within-location:
       lid: 'lid-x'
-      location-type: 'web' #!! derived from location
-      name: "xxx",
-      urls: ["xxx"],
       at-position: # position的所有信息都内嵌在这里，没有单独的position document
         is-exist: true # default
         position-within-web-page:

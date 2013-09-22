@@ -10,8 +10,8 @@ locations =
       to: '2014-02-04 12:00:04' # 第一次报告这个location时from与to相同，之后，to是最后一次报告的时间
     alias: ["软件学院主页", "软院主页"]
     urls: ["http://ss.sysu.edu.cn/InformationSystem/", "http://ss.sysu.edu.cn/"]
-    retrieved-html: '<html> ... </html>'
-    web-page-snapshot: '/web-page-snapshot/lid-1' # 网页的快照，用于定位兴趣点（现在未必有用，但是将来会有用）
+    retrieved-html: '<html>... 假内容 ...</html>'
+    # web-page-snapshot: '/web-page-snapshot/l网页的快照，用于定位兴趣点，可直接从_id推算出，不再存储。
   
   youku-location = 
     _id: "lid-2" # 今后将由@+（mongoDB）自动生成
@@ -23,8 +23,8 @@ locations =
     is-existing: true
     is-internal: false # default 为true时，指不能够从公网访问的网页，或者公众无法进入的现实区域
     urls: ["http://v.youku.com/v_show/id_XNjA1OTQ2OTI0.html"]
-    retrieved-html: '<html> ... </html>'
-    web-page-snapshot: '/web-page-snapshot/lid-2' # 网页的快照，用于定位兴趣点（现在未必有用，但是将来会有用）
+    retrieved-html: '<html>... 假内容 ...</html>'
+    # web-page-snapshot: '/web-page-snapshot/l网页的快照，用于定位兴趣点，可直接从_id推算出，不再存储。
 
   OTHER_ONE_NOT_FOUND_IN_TEST =
     _id: "lid-x" # 今后将由@+（mongoDB）自动生成
@@ -36,6 +36,6 @@ locations =
     is-existing: true
     is-internal: false # default 为true时，指不能够从公网访问的网页，或者公众无法进入的现实区域
     urls: ["xxx"]
-    retrieved-html: '<html> ... </html>'
-    web-page-snapshot: 'xxx' # 网页的快照，用于定位兴趣点（现在未必有用，但是将来会有用）
+    retrieved-html: '<html>... 假内容 ...</html>'
+    # web-page-snapshot: 网页的快照，用于定位兴趣点，可直接从_id推算出，不再存储。
 
