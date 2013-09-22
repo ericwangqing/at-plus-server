@@ -22,7 +22,7 @@ module.exports  =
           (location) <-! locations-manager.create-or-update-a-location socket.id, 
             url: data.within-location.url
             name: data.within-location.name
-          (interesting-point-summary) <-! interesting-points-manager.create-interesting-point location._id, data
+          (interesting-point-summary) <-! interesting-points-manager.create-interesting-point location, data
           <-! replace-user-id-with-breif-user interesting-point-summary, 'createdBy'
           debug "------ emit: 'response-create-a-new-ip-on-a-new-url' ---------"
           socket.emit 'response-create-a-new-ip-on-a-new-url', 

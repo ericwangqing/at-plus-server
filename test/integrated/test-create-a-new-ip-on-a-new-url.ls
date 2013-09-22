@@ -62,8 +62,8 @@ describe '测试在新URL上创建新兴趣点时，Locations Channel与Interest
           debug "total-locations-in-db: #{total-locations-in-db}, total-interestiong-points-in-db: #{total-interestiong-points-in-db}"
           <-! should-db-not-include-any-new-location total-locations-in-db
           <-! should-new-location-url-added-as-alias testing-data.request-create-a-new-ip-on-a-new-url
-          # <-! should-db-include-a-new-interesting-point total-interestiong-points-in-db
-          # <-! should-db-include-the-requested-new-ip testing-data.request-create-a-new-ip-on-a-new-url
+          <-! should-db-include-a-new-interesting-point total-interestiong-points-in-db
+          <-! should-db-include-the-requested-new-ip testing-data.request-create-a-new-ip-on-a-new-url
           done-waiter!
 
         baixin.ip.on 'response-create-a-new-ip-on-a-new-url', !(data)-> should.fail "非创建者收到了'response-create-a-new-ip-on-a-new-url'"
@@ -168,7 +168,6 @@ should-db-not-include-any-new-location = !(old-amount, callback)->
   callback!
 
 should-new-location-url-added-as-alias = !(new-ip, callback)->
-  debug "new-ip.within-location.url: ", new-ip.within-location.url
   (locations) <-! query-collection 'locations', {urls: new-ip.within-location.url}
   locations.length.should.eql 1
   callback!
@@ -180,8 +179,8 @@ should-db-include-a-new-interesting-point = !(old-amount, callback)->
   callback!
 
 should-db-include-the-requested-new-ip = !(new-ip, callback)->
-  (locations) <-! query-collection 'locations', {urls: new-ip.within-location.url}
-  (locations) <-! query-collection 'interesting-points', {'withiLocation.lid': locations[0]._id} 
+  (ips) <-! query-collection 'interesting-points', {'title': new-ip.title} 
+  debug "ips: ", ips
   ips.length.should.eql 1
   callback!
 

@@ -37,7 +37,7 @@ summarize = (ip)->
   ip
 
 create-interesting-point = !(location, interesting-point-data, callback)->
-  debug "------ in: 'create-interesting-point' : ---------", interesting-point-data
+  debug "------ in: 'create-interesting-point' : ---------, location: ", location
   interesting-point = utils.clone interesting-point-data
   interesting-point.within-location.lid = location._id
   interesting-point.within-location.is-exist = true
