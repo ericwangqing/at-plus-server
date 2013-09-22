@@ -2,8 +2,7 @@ require! ['./database', './utils']
 _ = require 'underscore'
 
 get-interesting-points-summaries-map = !(locations-ids, callback)->
-  (db) <-! database.get-db
-  (err, ips) <-! db.at-plus['interesting-points'].find {'withinLocation.lid': "$in": locations-ids} .to-array
+  (ips) <-! database.query-collection 'interesting-points', {'withinLocation.lid': "$in": locations-ids}
   # debug 'get-interesting-points-summaries-map: ', ips.length
   callback create-interesting-points-summaries-map ips
 
@@ -37,7 +36,7 @@ summarize = (ip)->
   ip
 
 create-interesting-point = !(location, interesting-point-data, callback)->
-  debug "------ in: 'create-interesting-point' : ---------, location: ", location
+  debug "------ in: 'create-interesting-point' : --------- "
   interesting-point = utils.clone interesting-point-data
   interesting-point.within-location.lid = location._id
   interesting-point.within-location.is-exist = true
@@ -45,9 +44,7 @@ create-interesting-point = !(location, interesting-point-data, callback)->
   # delete interesting-point.within-location.at-position
   (db) <-! database.get-db
   (err, result) <-! db.at-plus['interesting-points'].insert interesting-point
-  ip = summarize interesting-point
-  debug "before callback, ip: ", ip
-  callback ip
+  callback summarize interesting-point
 
 
 

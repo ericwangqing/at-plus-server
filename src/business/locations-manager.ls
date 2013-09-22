@@ -4,9 +4,8 @@ _ = require 'underscore'
 
 
 resolve-locations = !(request-locations, callback)->
-  (db) <-! database.get-db
   urls = if (request-locations and request-locations.urls) then request-locations.urls else []
-  (err, locations) <-! db.at-plus.locations.find {urls: "$in": urls} .to-array
+  (locations) <-! database.query-collection 'locations',  {urls: "$in": urls}
   inexistence-locations-urls = find-inexistence-locations urls, locations
   callback (create-locations-for-response locations), inexistence-locations-urls
 
@@ -65,10 +64,6 @@ get-old-or-create-new-location = !(url-data, callback)->
 place-web-page-snapshot = !(snapshot, lid)->
   debug "*************** place-web-page-snapshot 尚未实现 ***************"
   # 将snapshot，放到恰当位置，能够通过 /web-page-snapshot/lid 访问
-
-  location = {_id: Math.random!}
-  is-new = if get-testing-control!.locations-manager.get-old-or-create  -new-location.is-new then true else false
-  callback is-new, location
 
 update-location-internality = !(lid, is-internal, callback)->
   debug "------ in: 'update-location-internality' ---------"

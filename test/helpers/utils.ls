@@ -1,4 +1,4 @@
-require! [async, '../bin/database', '../bin/config']
+require! {async, '../bin/database', '../bin/config'}
 debug = require('debug')('at-plus')
 _ = require 'underscore'
 
@@ -54,6 +54,10 @@ close-db = !(done)->
   (db) <-! database.get-db
   database.shutdown-mongo-client done
 
+count-amount-of-docs-in-a-collection = !(collection-name, callback)->
+  (results) <-! database.query-collection collection-name, {}
+  callback results.length
+
 chop-off-id = (obj)-> # 从服务端得回的数据，常常包括了由mongoDB生成的_id，不应当包括在数据的比较中，需要清洗。
   if _.is-array obj
     for item in obj
@@ -72,4 +76,5 @@ module.exports =
   open-clean-db-and-load-fixtures: open-clean-db-and-load-fixtures
   prepare-clean-test-db: prepare-clean-test-db
   close-db: close-db
+  count-amount-of-docs-in-a-collection: count-amount-of-docs-in-a-collection
   chop-off-id: chop-off-id

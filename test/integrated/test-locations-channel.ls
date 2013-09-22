@@ -38,15 +38,6 @@ describe '测试location channel', !->
 
       set-timeout (-> done!), 1000
 
-
-
-
-
-
-  describe '测试are interal locations / report internal or not', !-> # 在Spike之后，针对已有协议，考虑更多各种情况，进行BDD开发。
-  describe '测试are ask resolving locations / answer resolved locations', !->
-  describe '测试are interal locations/report internal or not', !->
-
   before-each !(done)->
     <-! server.start
     socket-helper.clear-all-client-sockets! # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!

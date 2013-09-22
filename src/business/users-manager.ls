@@ -2,9 +2,8 @@ require! './database'
 _ = require 'underscore'
 
 get-brief-users-map = !(uids, current-uid, callback)->
-  (db) <-! database.get-db
   uids.push current-uid
-  (err, users) <-! db.at-plus.users.find {_id: "$in": uids} .to-array
+  (users) <-! database.query-collection 'users', {_id: "$in": uids}
   callback create-brief-users-map users, current-uid
 
 create-brief-users-map = (users, current-uid)->
@@ -29,8 +28,7 @@ create-brief-user = (user)->
   avatar: user.avatars[0]
 
 create-brief-user-from-uid = (uid, callback)->
-  (db) <-! database.get-db
-  (err, users) <-! db.at-plus.users.find {_id: uid} .to-array
+  (users) <-! database.query-collection 'users', {_id: uid}
   callback create-brief-user users[0]
 
 get-user-by-id = !(users, id)->

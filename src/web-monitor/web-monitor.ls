@@ -7,7 +7,8 @@ find-location-for-url = !(url-data, callback)->
     (err, location) <-! db.at-plus.locations.find-one 
     callback location, null
   else
-    retrieve-html-and-snapshot-at-url url-data.url, callback
+    (retrieved-html) <-! retrieve-html-and-snapshot-at-url url-data.url
+    callback null, retrieved-html
 
 retrieve-html-and-snapshot-at-url = !(url, callback)->
   debug "*************** retrieve-html-and-snapshot-at-url 尚未实现，现在直接返回预设的html ***************"
