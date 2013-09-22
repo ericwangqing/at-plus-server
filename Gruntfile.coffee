@@ -30,7 +30,7 @@ module.exports = (grunt)->
           expand: true # 将来改为在dev下的配置
           # flatten: true
           cwd: 'test'
-          src: ['**/*.ls', '!header.ls', '!helpers/*', '!fixtures/*']
+          src: ['**/*.ls', '!header.ls', '!helpers/**/*', '!fixtures/**/*']
           dest: 'test-temp/'
           ext: '.ls'
         ]
@@ -60,7 +60,7 @@ module.exports = (grunt)->
           expand: true
           flatten: true
           cwd: 'test'
-          src: ['helpers/*.ls', 'fixtures/*.ls']
+          src: ['helpers/**/*.ls', 'fixtures/**/*.ls']
           dest: 'test-bin/'
           ext: '.js'
         ]

@@ -1,16 +1,16 @@
 # -------------------- Web locations --------------
 update =
   type: "new-ip-added"
-  lid: "lid-new"
+  _id: "lid-new"
   added-interesting-point:
-    ipid: "ipid-new"
+    _id: "ipid-new"
     title: "无法阻挡的@+"
     content: "人类已经无法阻挡@+了"
     createTime: "2013-08-18 23:11:09"
     createdBy:
-      uid: "uid-1"
+      _id: "uid-1"
       name: "小东"
-      avatar: "/avatars/u/uid-1/1"
+      avatar: "/avatars/u/uid-1/2"
     isPrivate: false
     pictures: [
       type: "snapshoot"

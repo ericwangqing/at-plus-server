@@ -1,53 +1,78 @@
 describe '测试在新URL上创建新兴趣点时，Locations Channel与Interesting Points Channel的协同', !->
-  describe '创建的整个流程，有按照http://my.ss.sysu.edu.cn/wiki/pages/viewpage.action?pageId=221184007的设计进行', !->
-    debug '''
-    ************ 请注意，本测例需要人工观察，判断是否正确 **************
-    '''    
-    can '提交创建请求后，按照设计，服务端各模块执行了流程（url被解析为已有location的alias）', !(done)->
-      open-client-with-testing-helper is-url-new-location = false, !(locations-channel, ip-channel, data)->
-        debug-output-client-request-and-response-steps locations-channel, ip-channel, done
+  # describe '创建的整个流程，有按照http://my.ss.sysu.edu.cn/wiki/pages/viewpage.action?pageId=221184007的设计进行', !->
+  #   debug '''
+  #   ************ 请注意，本测例需要人工观察，判断是否正确 **************
+  #   '''    
+  #   can '提交创建请求后，按照设计，服务端各模块执行了流程（url被解析为已有location的alias）', !(done)->
+  #     open-client-with-testing-helper is-url-new-location = false, !(locations-channel, ip-channel, data)->
+  #       debug-output-client-request-and-response-steps locations-channel, ip-channel, done
 
-    can '提交创建请求后，按照设计，服务端各模块执行了流程（url被解析为新location的情况）', !(done)->
-      open-client-with-testing-helper is-url-new-location = true, !(locations-channel, ip-channel, data)->
-        debug-output-client-request-and-response-steps locations-channel, ip-channel, done
+  #   can '提交创建请求后，按照设计，服务端各模块执行了流程（url被解析为新location的情况）', !(done)->
+  #     open-client-with-testing-helper is-url-new-location = true, !(locations-channel, ip-channel, data)->
+  #       debug-output-client-request-and-response-steps locations-channel, ip-channel, done
 
-  describe '多人交互时，消息发送和接收正确', !->
-    describe 'url为已有locatoin的alias时', !->
-      can '创建者收到response-create-a-new-ip-on-a-new-url，之前在此页面的用户收到push-location-updated', !(done)->
-        (xiaodong-locations-channel, xiaodong-ip-channel, data) <-! open-client-with-testing-helper is-url-new-location = false
-        (baixin-locations-channel, baixin-ip-channel, data) <-! open-client-without-testing-helper
-        waiter = new utils.All-done-waiter done
+  # describe '多人交互时，消息发送和接收正确', !->
+  #   describe 'url为已有locatoin的alias时，消息次序正确', !->
+  #     can '创建者收到response-create-a-new-ip-on-a-new-url，之前在此页面的用户收到push-location-updated', !(done)->
+  #       (xiaodong, baixin, wait) <-! open-two-clients is-url-new-location = false, done
+  #       xiaodong.ip.on 'response-create-a-new-ip-on-a-new-url', wait !(data)-> debug "创建者收到创建成功消息"
+  #       baixin.ip.on 'response-create-a-new-ip-on-a-new-url', !(data)-> should.fail "非创建者收到了'response-create-a-new-ip-on-a-new-url'"
 
-        xiaodong-ip-channel.on 'response-create-a-new-ip-on-a-new-url', waiter.add-waiting-function !(data)-> debug "创建者收到创建成功消息"
-        baixin-ip-channel.on 'response-create-a-new-ip-on-a-new-url', !(data)-> should.fail "非创建者收到了'response-create-a-new-ip-on-a-new-url'"
+  #       baixin.locations.on 'push-location-updated', wait !(data)-> debug "非创建者收到location更新消息"
+  #       xiaodong.locations.on 'push-location-updated', !(data)-> should.fail "创建者收到了'push-location-updated'"
 
-        baixin-locations-channel.on 'push-location-updated', waiter.add-waiting-function !(data)-> debug "非创建者收到location更新消息"
-        xiaodong-locations-channel.on 'push-location-updated', !(data)-> should.fail "创建者收到了'push-location-updated'"
+  #       xiaodong.ip.emit 'request-create-a-new-ip-on-a-new-url'     
 
-        xiaodong-ip-channel.emit 'request-create-a-new-ip-on-a-new-url'     
+  #   describe 'url为新的locatoin时，消息次序正确', !->
+  #     can '创建者收到response-create-a-new-ip-on-a-new-url，之前在此页面的用户收到push-location-updated', !(done)->
+  #       (xiaodong, baixin, wait) <-! open-two-clients is-url-new-location = true, done
+  #       xiaodong.ip.on 'response-create-a-new-ip-on-a-new-url', wait !(data)-> debug "创建者收到创建成功消息"
+  #       baixin.ip.on 'response-create-a-new-ip-on-a-new-url', !(data)-> should.fail "非创建者收到了'response-create-a-new-ip-on-a-new-url'"
 
-    describe 'url为新的locatoin时', !->
-      can '创建者收到response-create-a-new-ip-on-a-new-url，之前在此页面的用户收到push-location-updated', !(done)->
-        (xiaodong-locations-channel, xiaodong-ip-channel, data) <-! open-client-with-testing-helper is-url-new-location = true
-        (baixin-locations-channel, baixin-ip-channel, data) <-! open-client-without-testing-helper
-        waiter = new utils.All-done-waiter done
+  #       baixin.locations.on 'push-location-updated', wait !(data)-> debug "非创建者收到location更新消息"
+  #       xiaodong.locations.on 'push-location-updated', !(data)-> should.fail "创建者收到了'push-location-updated'"
 
-        xiaodong-ip-channel.on 'response-create-a-new-ip-on-a-new-url', waiter.add-waiting-function !(data)-> debug "创建者收到创建成功消息"
-        baixin-ip-channel.on 'response-create-a-new-ip-on-a-new-url', !(data)-> should.fail "非创建者收到了'response-create-a-new-ip-on-a-new-url'"
+  #       xiaodong.locations.on 'ask-location-internality', !(data)->
+  #         debug "创建者收到了查询location internality消息"
+  #         xiaodong.locations.emit 'answer-location-internality', is-internal: fake-figure-out-location-internality data.url, data.server-retrieved-html
+  #       baixin.locations.on 'ask-location-internality', !(data)->
+  #         should.fail "非创建者收到了查询location internality消息"
 
-        baixin-locations-channel.on 'push-location-updated', waiter.add-waiting-function !(data)-> debug "非创建者收到location更新消息"
-        xiaodong-locations-channel.on 'push-location-updated', !(data)-> should.fail "创建者收到了'push-location-updated'"
-
-
-        xiaodong-locations-channel.on 'ask-location-internality', !(data)->
-          debug "创建者收到了查询location internality消息"
-          xiaodong-locations-channel.emit 'answer-location-internality', is-internal: fake-figure-out-location-internality data.url, data.server-retrieved-html
-        baixin-locations-channel.on 'ask-location-internality', !(data)->
-          should.fail "非创建者收到了查询location internality消息"
-
-        xiaodong-ip-channel.emit 'request-create-a-new-ip-on-a-new-url'     
+  #       xiaodong.ip.emit 'request-create-a-new-ip-on-a-new-url'     
 
   describe '创建兴趣点后，客户端接收到正确的数据，服务端正确保存了兴趣点', !->
+    testing-data = null
+    before-each !->
+      testing-data := prepare-testing-data!
+
+    describe 'url为已有locatoin的alias时，消息内容正确，兴趣点正确保存', !->
+      can '创建者收到response-create-a-new-ip-on-a-new-url，之前在此页面的用户收到push-location-updated', !(done)->
+        (xiaodong, baixin, wait) <-! open-two-clients is-url-new-location = false, done
+        xiaodong.ip.on 'response-create-a-new-ip-on-a-new-url', wait !(data)-> 
+          debug "创建者收到创建成功消息"
+          data.should.have.property 'lid'
+          data.should.have.property 'ipid'
+          data.result.should.be 'success'
+
+          done-waiter = wait!
+          <-! should-db-not-include-any-new-location
+          <-! should-db-include-the-requested-new-ip testing-data.request-create-a-new-ip-on-a-new-url
+          done-waiter!
+
+        baixin.ip.on 'response-create-a-new-ip-on-a-new-url', !(data)-> should.fail "非创建者收到了'response-create-a-new-ip-on-a-new-url'"
+
+        baixin.locations.on 'push-location-updated', wait !(data)-> 
+          debug "非创建者收到location更新消息"
+          data.type.should.be 'new-ip-added'
+          data.should.have.property '_id'
+          data.added-interesting-point.should.have.property '_id'
+          data.added-interesting-point.created-by.should.have.property '_id'
+          (utils.chop-of-id data).should.eql (utils.chop-off-id testing-data.push-location-updated)
+
+        xiaodong.locations.on 'push-location-updated', !(data)-> should.fail "创建者收到了'push-location-updated'"
+
+        xiaodong.ip.emit 'request-create-a-new-ip-on-a-new-url', testing-data.request-create-a-new-ip-on-a-new-url
+
 
   before-each !(done)->
     <-! server.start
@@ -72,6 +97,12 @@ open-client-with-testing-helper = !(is-url-new-location, callback)->
       testing-control: locations-manager: get-old-or-create-new-location: is-new: is-url-new-location
   }, callback   
 
+
+open-two-clients = !(is-url-new-location, done, callback)->
+  (a-locations-channel, a-ip-channel, data) <-! open-client-with-testing-helper is-url-new-location = false
+  (b-locations-channel, b-ip-channel, data) <-! open-client-without-testing-helper
+  done-waiter = new utils.All-done-waiter done
+  callback {locations: a-locations-channel, ip: a-ip-channel}, {locations: b-locations-channel, ip: b-ip-channel}, done-waiter.add-waiting-function
 
 open-client = !(testing-helper-channel-config, callback)->
   channels = null
@@ -105,6 +136,10 @@ debug-output-client-request-and-response-steps = !(locations-channel, ip-channel
     set-timeout (!-> done!), 300 # 等待所有通信完成。
   debug "@+ Client: ======== ip-channelemit 'request-create-a-new-ip-on-a-new-url' =========="
   ip-channel.emit 'request-create-a-new-ip-on-a-new-url'
+
+prepare-testing-data = ->
+  request-create-a-new-ip-on-a-new-url: utils.load-fixture 'request-create-a-new-ip-on-a-new-url'
+  push-location-updated: utils.load-fixture 'request-create-a-new-ip-on-a-new-url'
 
 
 

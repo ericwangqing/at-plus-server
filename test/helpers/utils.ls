@@ -9,10 +9,10 @@ class All-done-waiter
   !(@done)->
     @running-functions = 0
 
-  set-done: (done)->
+  set-done: (done)~>
     @done = done
 
-  add-waiting-function: (fn)->
+  add-waiting-function: (fn)~>
     @running-functions += 1
     !~>
       fn.apply null, arguments if fn
