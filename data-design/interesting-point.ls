@@ -1,4 +1,4 @@
-interesting-point =
+intinteresting-point =
   _id: 'xxxx'
   type: 'web' # web | real
   title: '无法阻挡的@+' 
