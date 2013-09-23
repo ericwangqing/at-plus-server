@@ -47,7 +47,7 @@ join-locations-rooms = !(socket, locations)->
 
 join-inexsitence-locations-rooms =!(socket, inexistence-locations-urls)->
   for url in inexistence-locations-urls
-    socket.join get-room url
+    socket.join room = get-room url
     debug "socket: #{socket.id} join #{room}"
 
 get-room = (inexistence-location-url)->
@@ -72,7 +72,7 @@ replace-uids-with-brief-users = !(interesting-points-summaries-map, brief-users-
 
 change-url-room-to-location-room = !(location-channel, url, location)->
   debug "------ in: 'change-url-room-to-location-room' ---------"
-  for client in location-channel.clients url
+  for client in location-channel.clients get-room url
     debug "client socket: #{client.id} join #{location._id}"
     client.leave get-room url
     client.join location._id
@@ -84,6 +84,21 @@ get-push-location-updated-message = (data)->
 
 module.exports  = 
   init: !(io)->
+    # ----- 以下响应服务端business层的请求 ---------------- #
+    event-bus.on 'locations-channel:ask-location-internality', !(data)->
+      if io.sockets.sockets[data.session-id]
+        debug "------ in: 'locations-channel:ask-location-internality' ---------"
+        debug "------ emit: 'ask-location-internality' --------- socket: ", io.sockets.sockets[data.session-id].id
+        io.of('/locations').sockets[data.session-id].emit 'ask-location-internality', data 
+
+
+    event-bus.on 'locations-channel:location-updated', !(data)~>
+      if io.sockets.sockets[data.session-id]
+        debug "------ in: 'locations-channel:location-updated' --------- socket: ", io.sockets.sockets[data.session-id].id
+        change-url-room-to-location-room io.of('/locations'), data.url, data.location
+        debug "------ broadcast: 'push-location-updated' ---------"
+        io.of('/locations').sockets[data.session-id].broadcast.to(data.location._id).emit 'push-location-updated', get-push-location-updated-message data
+
     channel-initial-wrapper.server-channel-initial-wrapper {
       channel: io.of('/locations')
 
@@ -100,19 +115,6 @@ module.exports  =
           debug "------ in: 'answer-location-internality' ---------"
           if (data.is-internal)
             locations-manager.update-location-internality data.lid, true
-
-        # ----- 以下响应服务端business层的请求 ---------------- #
-        event-bus.on 'locations-channel:ask-location-internality', !(data)->
-          debug "------ in: 'locations-channel:ask-location-internality' --------- socket: ", socket.id
-          debug "------ emit: 'ask-location-internality' ---------"
-          socket.emit 'ask-location-internality', data if socket.id is data.session-id
-
-
-        event-bus.on 'locations-channel:location-updated', !(data)~>
-          debug "------ in: 'locations-channel:location-updated' --------- socket: ", socket.id
-          change-url-room-to-location-room @channel, data.url, data.location
-          debug "------ broadcast: 'push-location-updated' ---------"
-          socket.broadcast.to(data.location.lid).emit 'push-location-updated', get-push-location-updated-message data if socket.id is data.session-id
 
         # socket.on 'leave-location'
 

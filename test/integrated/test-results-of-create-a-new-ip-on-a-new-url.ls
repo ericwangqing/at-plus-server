@@ -84,6 +84,8 @@ should-db-include-a-new-interesting-point = !(old-amount, callback)->
 should-db-include-the-requested-new-ip = !(new-ip, callback)->
   debug "new-ip.title: ", new-ip.title
   (ips) <-! query-collection 'interesting-points', {'title': new-ip.title} 
+  if ips.length > 1
+    debug "ips: ", ips
   ips.length.should.eql 1
   callback!
 
