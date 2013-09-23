@@ -47,7 +47,7 @@ get-old-or-create-new-location = !(url-data, callback)->
   else
     current-time = new Date!
     (db) <-! database.get-db
-    (err, location) <-! db.at-plus.locations.insert {
+    (err, locations) <-! db.at-plus.locations.insert {
       type: 'web'
       name: url-data.name
       is-existing: true
@@ -56,10 +56,10 @@ get-old-or-create-new-location = !(url-data, callback)->
         from: current-time
         to: current-time
       urls: [url-data.url]
-      retrieved-html: new-web-page.retrieved-html
+      server-retrieved-html: new-web-page.retrieved-html
     }
-    place-web-page-snapshot new-web-page.snapshot, location._id
-    callback true, location
+    place-web-page-snapshot new-web-page.snapshot, locations[0]._id
+    callback true, locations[0]
 
 place-web-page-snapshot = !(snapshot, lid)->
   debug "*************** place-web-page-snapshot 尚未实现 ***************"
