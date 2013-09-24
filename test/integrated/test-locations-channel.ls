@@ -9,6 +9,7 @@ describe '测试location channel', !->
 
     can 'initial with一个已有，一个@+中还没有的location时，只给回一个已有兴趣点', !(done)->
       open-at-plus-on-locations [sysu-url], xiaodong-id, !(socket, data)->
+          console.log data.length-of
           data.should.have.property('locations').with.length-of 1
           data.locations.should.include-eql response-sysu-location # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
           data.locations.should.not.include-eql response-youku-location # include-eql可以判断数组，而include不可以，因此这里需要用include-eql
@@ -32,6 +33,7 @@ describe '测试location channel', !->
       youku-location = get-location data.locations, youku-url
 
       xiaodong.on 'response-update-location', !(data)->
+        console.log data
         should.fail '收到了来自自己不在的location的消息'
 
       baixin.emit 'request-update-location', {lid: youku-location._id, message: '新的兴趣点'}

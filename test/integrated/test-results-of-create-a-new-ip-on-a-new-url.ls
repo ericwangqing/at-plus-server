@@ -18,6 +18,12 @@ describe '测试在新URL上创建新兴趣点时，Locations Channel与Interest
         should-creator-and-observer-recieved-correct-messages-AND-location-and-interesting-point-created \
           is-url-new-location = true, done
 
+    describe '用户小东在兴趣点上发言, 消息发送正确, 保存正确', !->
+      can '成功后,小东能够收到返回信息,所有用户(包括小东)能够收到该条发言信息', !(done)->
+        should-sender-and-observer-recieved-correct-messages-AND-ip-updated done
+
+
+
   before-each !(done)->
     <-! server.start
     socket-helper.clear-all-client-sockets! # the cache in it should be clear before each running, otherwise the connection will be reused, even if you restart the server!
@@ -35,6 +41,21 @@ describe '测试在新URL上创建新兴趣点时，Locations Channel与Interest
 prepare-testing-data = ->
   request-create-a-new-ip-on-a-new-url: utils.load-fixture 'request-create-a-new-ip-on-a-new-url'
   push-location-updated: utils.load-fixture 'push-location-updated'
+  request-send-a-message-on-an-ip: utils.load-fixture 'request-send-a-message-on-an-ip'
+  push-ip-updated: utils.load-fixture 'push-ip-updated'
+
+should-sender-and-observer-recieved-correct-messages-AND-ip-updated = !(done)->
+  (sender, observer,wait) <-! H.open-two-clients false, done
+  sender.ip.on 'response-send-a-new-message-on-an-ip',  wait !(data)->
+    console.log data
+    debug '发送者收到发送成功信息'
+    data.should.have.property 'mid'
+    data.should.have.property 'ipid'
+    data.result.should.eql 'success'
+    done-waiter = wait!
+    done-waiter!
+  (testing-data-to-send) <-! add-ipid-and-lid-to-testing-data testing-data.request-send-a-message-on-an-ip
+  sender.ip.emit 'request-send-a-new-message-on-an-ip', testing-data-to-send 
 
 should-creator-and-observer-recieved-correct-messages-AND-location-and-interesting-point-created = !(is-url-new-location, done)->
   request = testing-data.request-create-a-new-ip-on-a-new-url
@@ -121,4 +142,7 @@ should-db-include-the-requested-new-ip = !(new-ip, callback)->
   callback!
 
 
+add-ipid-and-lid-to-testing-data = !(testing-data, callback) ->
+  testing-data.ipid = 'ipid3'
+  callback testing-data
 

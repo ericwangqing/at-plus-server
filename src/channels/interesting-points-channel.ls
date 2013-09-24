@@ -31,6 +31,12 @@ module.exports  =
             ipid: interesting-point-summary._id
           locations-manager.update-location-with-ip socket.id, data.within-location.url, location, interesting-point-summary
 
+        socket.on 'request-send-a-new-message-on-an-ip', !(data)->
+          (location) <-! locations-manager.create-or-update-a-location socket.id,
+            url: data.within-location.url
+            name: data.within-location.name
+          (result) <-! interesting-points-manager.send-message location, data
+          socket.emit 'response-send-a-new-message-on-an-ip', result
         callback!
         
     }

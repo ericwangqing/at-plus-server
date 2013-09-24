@@ -44,8 +44,30 @@ create-interesting-point = !(location, interesting-point-data, callback)->
   (err, result) <-! db.at-plus['interesting-points'].insert interesting-point
   callback summarize interesting-point
 
+send-message = !(location, data, callback) ->
+  (result)<-! save-msg-into-db data
+  if result
+    console.log result
+    callback { 
+      result: 'success'
+      ipid: result.ipid
+      mid: result.mid
+    }
+  else
+    callback 'err'
+
+
+save-msg-into-db = !(data, callback) ->
+  (db) <-! database.get-db 
+  (err,result) <-! db.at-plus.messages.insert data
+  throw err if err
+  callback result[0]
+
+
+
 module.exports =
   get-interesting-points-summaries-map: get-interesting-points-summaries-map
   visit-uids-of-interesting-points-summaries-map: visit-uids-of-interesting-points-summaries-map
   create-interesting-point: create-interesting-point
+  send-message: send-message
   create-interesting-points-summaries-map: create-interesting-points-summaries-map # !!暴露出来，仅仅是为了测试
