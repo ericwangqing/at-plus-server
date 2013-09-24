@@ -1,8 +1,9 @@
 require! ['./database','./testing-helper-channel'.get-testing-control]
 
 find-location-for-url = !(url-data, callback)->
-  debug "*************** find-location-for-url 尚未实现，现在是个mock，通过testing-helper频道控制 ***************"
-  if not get-testing-control!.locations-manager.get-old-or-create-new-location.is-new
+  can-find = not get-testing-control!.locations-manager.get-old-or-create-new-location.is-new
+  debug "*************** find-location-for-url 尚未实现，现在是个mock，通过testing-helper频道控制。能找到？#{can-find} ***************" 
+  if can-find
     (db) <-! database.get-db
     (err, location) <-! db.at-plus.locations.find-one 
     callback location, null

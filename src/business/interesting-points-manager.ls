@@ -40,13 +40,9 @@ create-interesting-point = !(location, interesting-point-data, callback)->
   interesting-point = utils.clone interesting-point-data
   interesting-point.within-location.lid = location._id
   interesting-point.within-location.is-exist = true
-  # interesting-point.within-location.at-position = position-within-web-page: interesting-point.within-location.at-position
-  # delete interesting-point.within-location.at-position
   (db) <-! database.get-db
   (err, result) <-! db.at-plus['interesting-points'].insert interesting-point
   callback summarize interesting-point
-
-
 
 module.exports =
   get-interesting-points-summaries-map: get-interesting-points-summaries-map
