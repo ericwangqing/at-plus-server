@@ -33,10 +33,10 @@ open-clean-db-and-load-fixtures = !(config, done)->
   <-! db.drop-database
   collections = _.keys config
   async.each collections, !(collection, next)->
-    (err, docs) <-! db.at-plus.[collection].insert config[collection]
+    (err, docs) <-! db.at-plus.[collection].insert config[collection], {safe: true}
     next!
-  ,
-  done!
+  , ->
+    done!
 
 prepare-clean-test-db = !(done)->
   locations = load-fixture "locations-in-db"

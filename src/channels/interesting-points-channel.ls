@@ -9,13 +9,26 @@ replace-user-id-with-breif-user = !(obj, uid-attr-name, callback)->
   obj[uid-attr-name] = user
   callback!
 
+get-push-ip-updated-message = (data)->
+  type: "new-msg-added"
+  _id: data._id
+  added-msg: data.message
+
 
 module.exports  = 
   init: !(io)->
+    # ------------------- 以下响应服务端business层的请求----------------#
+    event-bus.on 'interesting-points-channel:ip-updated', !(data)~>
+      if io.sockets.sockets[data.session-id]
+        debug "-------in: 'interesting-points-channel: ip-updated' ------socket:", io.sockets.sockets[data.session-id].id
+        debug "------------broadcase: 'push-ip-updated'"
+        io.of('/interesting-points').sockets[data.session-id].broadcast.to(data._id).emit 'push-ip-updated', get-push-ip-updated-message data
+
     channel-initial-wrapper.server-channel-initial-wrapper {
       channel: io.of('/interesting-points')
 
       business-handlers-register: !(socket, data, callback)->
+        
         # ----- 以下响应来自客户端的请求 ---------------- #
         socket.on 'request-create-a-new-ip-on-a-new-url', !(data)->
           debug "------ in: 'request-create-a-new-ip-on-a-new-url', socket.id: ---------", socket.id
@@ -31,6 +44,13 @@ module.exports  =
             ipid: interesting-point-summary._id
           locations-manager.update-location-with-ip socket.id, data.within-location.url, location, interesting-point-summary
 
+        socket.on 'request-send-a-new-message-on-an-ip', !(data)->
+          (location) <-! locations-manager.create-or-update-a-location socket.id,
+            url: data.within-location.url
+            name: data.within-location.name
+          (result) <-! interesting-points-manager.send-message location, data
+          socket.emit 'response-send-a-new-message-on-an-ip', result
+          interesting-points-manager.update-ip-with-msg socket.id, data.within-location.urls, data
         callback!
         
     }
