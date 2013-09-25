@@ -7,7 +7,8 @@ describe '测试在新URL上创建新兴趣点时，Locations Channel与Interest
       count-locaitons-in-db !(amount)-> total-locations-in-db := amount
       count-interesting-points-in-db !(amount)-> total-interestiong-points-in-db := amount
       testing-data := prepare-testing-data!
-
+    
+    '''
     describe 'url为已有locatoin的alias时，消息内容正确，兴趣点正确保存', !->
       can '创建者收到response-create-a-new-ip-on-a-new-url，之前在此页面的用户收到push-location-updated', !(done)->
         should-creator-and-observer-recieved-correct-messages-AND-location-and-interesting-point-created \
@@ -17,6 +18,7 @@ describe '测试在新URL上创建新兴趣点时，Locations Channel与Interest
       can '创建者收到response-create-a-new-ip-on-a-new-url，之前在此页面的用户收到push-location-updated', !(done)->
         should-creator-and-observer-recieved-correct-messages-AND-location-and-interesting-point-created \
           is-url-new-location = true, done
+    '''
 
     describe '用户小东在兴趣点上发言, 消息发送正确, 保存正确', !->
       can '成功后,小东能够收到返回信息,所有用户(包括小东)能够收到该条发言信息', !(done)->
@@ -47,7 +49,6 @@ prepare-testing-data = ->
 should-sender-and-observer-recieved-correct-messages-AND-ip-updated = !(done)->
   (sender, observer,wait) <-! H.open-two-clients false, done
   sender.ip.on 'response-send-a-new-message-on-an-ip',  wait !(data)->
-    console.log data
     debug '发送者收到发送成功信息'
     data.should.have.property 'mid'
     data.should.have.property 'ipid'
@@ -55,6 +56,12 @@ should-sender-and-observer-recieved-correct-messages-AND-ip-updated = !(done)->
     done-waiter = wait!
     done-waiter!
   (testing-data-to-send) <-! add-ipid-and-lid-to-testing-data testing-data.request-send-a-message-on-an-ip
+
+  observer.ip.on 'push-ip-updated', wait !(data)->
+    debug '观察者收到location更新信息'
+    data.type.should.equal 'new-msg-added'
+    data.added-msg.should.have.property 'mid'
+
   sender.ip.emit 'request-send-a-new-message-on-an-ip', testing-data-to-send 
 
 should-creator-and-observer-recieved-correct-messages-AND-location-and-interesting-point-created = !(is-url-new-location, done)->

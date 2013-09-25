@@ -59,6 +59,7 @@ get-response-initial-data = (locations, interesting-points-summaries-map, brief-
   locations.for-each !(location)->
     location.interesting-points-summaries = interesting-points-summaries-map[location._id] 
     # debug "location.interesting-points-summaries: ", location.interesting-points-summaries
+    #if location.interesting-points-summaries
     for ips in location.interesting-points-summaries
       ips.recent-messages = recent-messages-map[ips._id]
       # debug "ips: ", ips

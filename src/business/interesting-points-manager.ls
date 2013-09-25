@@ -1,4 +1,5 @@
 require! ['./database', './utils']
+event-bus = require './event-bus'
 _ = require 'underscore'
 
 get-interesting-points-summaries-map = !(locations-ids, callback)->
@@ -47,7 +48,6 @@ create-interesting-point = !(location, interesting-point-data, callback)->
 send-message = !(location, data, callback) ->
   (result)<-! save-msg-into-db data
   if result
-    console.log result
     callback { 
       result: 'success'
       ipid: result.ipid
@@ -63,6 +63,14 @@ save-msg-into-db = !(data, callback) ->
   throw err if err
   callback result[0]
 
+update-ip-with-msg = !(session-id, url, data)->
+  debug "-----in: 'update-ip-with-msg'---------"
+  debug "-----in: 'interesting-points-channel: ip-updated' -------"
+  event-bus.emit 'interesting-points-channel:ip-updated',
+    session-id: session-id
+    url: url
+    message: data
+
 
 
 module.exports =
@@ -70,4 +78,6 @@ module.exports =
   visit-uids-of-interesting-points-summaries-map: visit-uids-of-interesting-points-summaries-map
   create-interesting-point: create-interesting-point
   send-message: send-message
+  update-ip-with-msg: update-ip-with-msg
   create-interesting-points-summaries-map: create-interesting-points-summaries-map # !!暴露出来，仅仅是为了测试
+
